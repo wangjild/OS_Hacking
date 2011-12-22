@@ -1,0 +1,19 @@
+1. Create Hard Disk
+	1.1 Make disk.img
+		dd if=/dev/zero of=disk.img count=20160
+	1.2	Format the Disk
+		$ fdisk disk.img
+			x     -> Extra functionality
+   		c 20  -> 20 cylinders
+   		h 16  -> 16 heads
+   		s 63  -> 63 sectors per track
+   		r     -> Return to main menu
+   		n     -> Create a new partition
+   		p     -> Primary
+   		1     -> Partition #1
+   		1     -> First cylinder
+   		20    -> Last cylinder
+   		a     -> Set bootable flag
+   		1     -> Partition number
+   		w     -> Write partition to disk
+		
