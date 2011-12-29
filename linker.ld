@@ -7,7 +7,7 @@ SECTIONS{
 	.rodata	ALIGN	(0x1000) : {
 		*(.rodata)
 	}
-	.data	ALGIN	(0x1000) : {
+	.data	ALIGN	(0x1000) : {
 		*(.data)
 	}
 	.bss : {
