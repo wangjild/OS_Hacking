@@ -1,15 +1,15 @@
 ###############################################################
 # Configuration file for Bochs
 ###############################################################
-config_interface: textconfig
+#config_interface: textconfig
 # how much memory the emulated machine will have
 megs: 32
 
-display_library: term
+#display_library: term
 
 # filename of ROM images
-romimage: file=/usr/local/share/bochs/BIOS-bochs-latest
-vgaromimage: file=/usr/local/share/bochs/VGABIOS-lgpl-latest
+romimage: file=./opt/share/bochs/BIOS-bochs-latest
+vgaromimage: file=./opt/share/bochs/VGABIOS-lgpl-latest
 
 # what disk images will be used
 # floppya: 1_44=a.img, status=inserted
