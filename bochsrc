@@ -23,4 +23,4 @@ boot: disk
 mouse: enabled=0
 log: bochs.log
 # enable key mapping, using US layout as default.
-keyboard_mapping: enabled=1, map=/usr/local/share/bochs/keymaps/x11-pc-us.map
+keyboard_mapping: enabled=1, map=./opt/share/bochs/keymaps/x11-pc-us.map

@@ -16,9 +16,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
 */
 
-/* modify
-  Wang Jing
-  wangjild@gmail.com
+/* 
+ * @brief Catos kernel entry
+ * @author Wang Jing (wangjild@gmail.com)
 */
      
 #include <multiboot.h>
