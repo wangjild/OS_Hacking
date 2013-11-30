@@ -1,9 +1,11 @@
 ###############################################################
 # Configuration file for Bochs
 ###############################################################
-
+config_interface: textconfig
 # how much memory the emulated machine will have
 megs: 32
+
+display_library: term
 
 # filename of ROM images
 romimage: file=/usr/local/share/bochs/BIOS-bochs-latest

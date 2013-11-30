@@ -3,7 +3,7 @@
 		dd if=/dev/zero of=disk.img count=20160
 	1.2	Format the Disk
 		$ fdisk disk.img
-			x     -> Extra functionality
+	    x     -> Extra functionality
    		c 20  -> 20 cylinders
    		h 16  -> 16 heads
    		s 63  -> 63 sectors per track
