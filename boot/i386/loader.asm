@@ -16,17 +16,17 @@ MultiBootHeader:
    dd CHECKSUM
 ; reserve initial kernel stack space
  
-STACKSIZE equ 0x4000                  ; that's 16k.
+STACKSIZE equ 0x4000              ; that's 16k.
 loader:
-   mov esp, stack+STACKSIZE           ; set up the stack
-   finit                              ; initialize FPU
-	 mov	eax,	0x2BADB002
-   push eax                           ; pass Multiboot magic number
-   push ebx                           ; pass Multiboot info structure
-   call  kernel_main                       ; call kernel proper
-   cli
+    mov esp, stack+STACKSIZE      ; set up the stack
+    finit                         ; initialize FPU
+    mov	eax,	0x2BADB002
+    push eax                      ; pass Multiboot magic number
+    push ebx                      ; pass Multiboot info structure
+    call kernel_main              ; call kernel proper
+    cli
 hang:
-   hlt                                ; halt machine should kernel return
+   hlt                            ; halt machine should kernel return
    jmp  hang
 section .bss
 align 32
