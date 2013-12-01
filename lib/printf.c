@@ -1,91 +1,91 @@
 /*
-  CopyRight
-*/
+   CopyRight
+   */
 #include <stdio.h>
 #include <stdlib.h>
 
 /* Format a string and print it on the screen, just like the libc
-        function printf. */
+   function printf. */
 void
 printf (const char *format, ...)
 {
-	char **arg = (char **) &format;
-	int c;
-	char buf[20];
+    char **arg = (char **) &format;
+    int c;
+    char buf[20];
 
-	arg++;
-     
-	while ((c = *format++) != 0)
-	{
-		if (c != '%')
-			putchar (c);
-		else
-		{
-			char *p;
+    arg++;
 
-			c = *format++;
-			switch (c)
-			{
-				case 'd':
-				case 'u':
-				case 'x':
-					itoa (buf, c, *((int *) arg++));
-					p = buf;
-					goto string;
-					break;
+    while ((c = *format++) != 0)
+    {
+        if (c != '%')
+            putchar (c);
+        else
+        {
+            char *p;
 
-				case 's':
-					p = *arg++;
-					if (! p)
-					p = "(null)";
+            c = *format++;
+            switch (c)
+            {
+                case 'd':
+                case 'u':
+                case 'x':
+                    itoa (buf, c, *((int *) arg++));
+                    p = buf;
+                    goto string;
+                    break;
 
-				string:
-					while (*p)
-					putchar (*p++);
-					break;
-     
-				default:
-					putchar (*((int *) arg++));
-					break;
-			}
-		}
-	}
+                case 's':
+                    p = *arg++;
+                    if (! p)
+                        p = "(null)";
+
+string:
+                    while (*p)
+                        putchar (*p++);
+                    break;
+
+                default:
+                    putchar (*((int *) arg++));
+                    break;
+            }
+        }
+    }
 }
 
 
-     /* Put the character C on the screen. */
+/* Put the character C on the screen. */
 void
 putchar (int c)
 {
-	if (c == '\n' || c == '\r')
-	{
-		newline:
-		xpos = 0;
-		ypos++;
-		if (ypos >= LINES)
-			ypos = 0;
-		return;
-	}
+    if (c == '\n' || c == '\r')
+    {
+newline:
+        xpos = 0;
+        ypos++;
+        if (ypos >= LINES)
+            ypos = 0;
+        return;
+    }
 
-	*(video + (xpos + ypos * COLUMNS) * 2) = c & 0xFF;
-	*(video + (xpos + ypos * COLUMNS) * 2 + 1) = ATTRIBUTE;
+    *(video + (xpos + ypos * COLUMNS) * 2) = c & 0xFF;
+    *(video + (xpos + ypos * COLUMNS) * 2 + 1) = ATTRIBUTE;
 
-	xpos++;
-	if (xpos >= COLUMNS)
-		goto newline;
+    xpos++;
+    if (xpos >= COLUMNS)
+        goto newline;
 }
 
-     /* Clear the screen and initialize VIDEO, XPOS and YPOS. */
+/* Clear the screen and initialize VIDEO, XPOS and YPOS. */
 void
 cls (void)
 {
-  int i;
-     
-  video = (unsigned char *) VIDEO;
-     
-  for (i = 0; i < COLUMNS * LINES * 2; i++)
-      *(video + i) = 0;
-     
-  xpos = 0;
-  ypos = 0;
+    int i;
+
+    video = (unsigned char *) VIDEO;
+
+    for (i = 0; i < COLUMNS * LINES * 2; i++)
+        *(video + i) = 0;
+
+    xpos = 0;
+    ypos = 0;
 }

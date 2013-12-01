@@ -127,12 +127,12 @@ kernel_main (unsigned long addr, unsigned long magic)
             (unsigned long) mmap < mbi->mmap_addr + mbi->mmap_length;
             mmap = (multiboot_memory_map_t *) ((unsigned long) mmap
                 + mmap->size + sizeof(mmap->size)))
-            printf ("\tsize = 0x%x, base_addr = 0x%x%x, length = 0x%x%x, type = 0x%x\n",
+            printf ("    size = 0x%x, base_addr = 0x%x%x, length = 0x%x%x, type = 0x%x\n",
                 (unsigned) mmap->size,
-                mmap->addr >> 32,
-                mmap->addr & 0xffffffff,
-                mmap->len >> 32,
-                mmap->len & 0xffffffff,
+                (unsigned) (mmap->addr >> 32),
+                (unsigned) (mmap->addr & 0x0ffffffff),
+                (unsigned) (mmap->len >> 32),
+                (unsigned) (mmap->len & 0x0ffffffff),
                 (unsigned) mmap->type);
     }
 
