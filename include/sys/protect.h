@@ -37,13 +37,12 @@
  *  | BASE_HIGN:8  |G|/| |V| Lmt:4 |P| P |S|  TYPE |  BASE_MID:8   |     
  *  |              | |B| |L|       | | L | |       |               |
  *  |---------------------------------------------------------------
- *  31              24              16              8             0
  *  7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0
  *  |--------------------------------------------------------------|
  *  |        BASE_LOW:16           |         LIMIT_LOW:16          |
  *  |--------------------------------------------------------------|
  *
- * 以下说明Copy自于渊的《Orange's 一个操作系统的实现》随书源码  
+ ***** 以下说明Copy自于渊的《Orange's 一个操作系统的实现》随书源码  
  *  (1) P:   存在(Present)位。
  *                P=1 表示描述符对地址转换是有效的，或者说该描述符所描述的段存在，即在内存中；
  *                P=0 表示描述符对地址转换无效，即该段不存在。使用该描述符进行内存访问时会引起异常。
@@ -115,13 +114,50 @@
  * (7) AVL:  软件可利用位。80386对该位的使用未左规定，Intel公司也保证今后开发生产的处理器只要与80386兼容，就不会对该位的使用做任何定义或规定
  * */
 
-struct segment {
+struct Segment {
     uint16_t limit_low;     /* LIMIT 0-15   */
     uint16_t base_low;      /* BASE  0-15   */
     uint8_t base_mid;       /* BASE  16-23  */
     uint8_t attr_low;       /* TYPE:4 S:1 DPL:2 P:1 */
-    uint8_t limit_high:4;   /* LIMIT 16-19  */
-    uint8_t attr_high:4;    /* AVL:1 Resvd:1 D/B:1 G:1  */
+    uint8_t attr_limit_high;   /* LIMIT 16-19 AVL:1 Resvd:1 D/B:1 G:1  */
     uint8_t base_high;      /* BASE  24-32  */
+};
+
+// G flag
+#define SEG_4K 0x80
+// D flag
+#define SEG_32 0x40
+
+// DPL flag
+#define SEG_DPL0 0x00
+#define SEG_DPL1 0x20
+#define SEG_DPL2 0x40
+#define SEG_DPL3 0x60
+
+// DATA TYPE (S:1 TYPE:4) 
+#define SEG_DR      0x90
+#define SEG_DRW     0x92
+#define SEG_DRWA    0x93
+
+// CODE TYPE (S:1 TYPE:4)
+#define SEG_C       0x98
+#define SEG_CA      0x99
+#define SEG_CR      0x9A
+#define SEG_CAR     0x9B
+#define SEG_CC      0x9C
+#define SEG_CAC     0x9D
+#define SEG_CRC     0x9E
+#define SEG_CARC    0x9F
+
+// SYSTEM TYPE (S:0 TYPE:4)
+#define SEG_LDT     0x82
+#define SEG_TG      0x85
+#define SEG_TSS     0x89
+#define SEG_CGATE   0x8C
+#define SEG_IGATE   0x8E
+#define SEG_TGATE   0x8F
+
+struct Gate {
+        
 };
 #endif
