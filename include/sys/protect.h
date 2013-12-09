@@ -157,7 +157,12 @@ struct Segment {
 #define SEG_IGATE   0x8E
 #define SEG_TGATE   0x8F
 
-struct Gate {
+typedef struct Gate {
         
-};
+} Gate_t;
+
+// Gdt here
+Segment_t gdt[128];
+
+// IDT here
 #endif
