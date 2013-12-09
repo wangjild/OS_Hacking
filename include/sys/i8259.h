@@ -27,18 +27,4 @@
 #ifndef _SYS_I8259_H_
 #define _SYS_I8259_H_
 
-#include <sys/type.h>
-
-void
-out_byte(uint16_t port, uint8_t val) {
-    asm volatile("out %%al, %%dx\n\tnop\n\tnop" : : "a"(val), "d"(port) );
-}
-
-uint8_t 
-in_byte (uint16_t port) {
-    uint8_t result;
-    asm volatile("in %%dx, %%al\n\tnop\n\tnop\n\t" : "=a"(result) : "d"(port));
-    return result;
-}
-
 #endif

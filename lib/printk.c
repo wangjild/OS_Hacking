@@ -1,13 +1,13 @@
 /*
    CopyRight
    */
-#include <stdio.h>
-#include <stdlib.h>
+#include <kstdio.h>
+#include <kstdlib.h>
 
 /* Format a string and print it on the screen, just like the libc
    function printf. */
 void
-printf (const char *format, ...)
+printk (const char *format, ...)
 {
     char **arg = (char **) &format;
     int c;

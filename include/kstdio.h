@@ -1,5 +1,5 @@
-#ifndef _STDIO_H_
-#define _STDIO_H_
+#ifndef _KSTDIO_H_
+#define _KSTDIO_H_
 /* Some screen stuff. */
 /* The number of columns. */
 #define COLUMNS                 80
@@ -19,7 +19,7 @@ static int ypos;
 static volatile unsigned char *video;
 
 void putchar (int c);
-void printf (const char *format, ...);
+void printk (const char *format, ...);
 void cls(void);
 
 #endif

@@ -3,9 +3,9 @@ CFLAGS=-I ./include -I ./include/boot -fno-builtin
 kernel:
 	nasm -f elf -o ./boot/i386/loader.o	./boot/i386/loader.asm
 	gcc $(CFLAGS) -o lib/itoa.o -c lib/itoa.c 
-	gcc $(CFLAGS) -o lib/printf.o -c lib/printf.c
+	gcc $(CFLAGS) -o lib/printk.o -c lib/printk.c
 	gcc $(CFLAGS) -o src/kernel.o -c src/kernel.c
-	ld -T linker.ld -o kernel.bin boot/i386/loader.o lib/itoa.o lib/printf.o src/kernel.o
+	ld -T linker.ld -o kernel.bin boot/i386/loader.o lib/itoa.o lib/printk.o src/kernel.o
 
 install: kernel
 	sudo losetup	-o 32256 /dev/loop0 disk.img
