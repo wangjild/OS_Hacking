@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include <kstdlib.h>
 
 
 void itoa (char *buf, int base, int d);
