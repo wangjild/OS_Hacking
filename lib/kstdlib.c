@@ -1,7 +1,16 @@
 #include <kstdlib.h>
 
+uint8_t in_byte(uint16_t port) {
+    uint8_t ret;
+    __asm__ __volatile__ ("inb %1, %0" : "=a"(ret) : "dN" (port));
+    return ret;
+}
 
-void itoa (char *buf, int base, int d);
+
+void out_byte(uint16_t port, uint8_t val) {
+    __asm__ __volatile__ ("outb %1, %0" : : "dN"(port), "a"(val));
+}
+
 
 /* Convert the integer D to a string and save the string in BUF. If
    BASE is equal to 'd', interpret that D is decimal, and if BASE is
