@@ -11,9 +11,14 @@ SECTIONS{
 		*(.data)
 	}
 	.bss : {
-		sbss = .;
+		sbss = . ;
 		*(COMMON)
 		*(.bss)
-		ebss = .;
+		ebss = . ;
 	}
+
+	_end = . ;
+	/* page dir and table here */
+	. = ALIGN(4096);
+    pg0 = . ;
 }

@@ -24,6 +24,8 @@
 #include <multiboot.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <sys/mm.h>
      
 /* Macros. */
      
@@ -137,4 +139,6 @@ kernel_main (unsigned long addr, unsigned long magic)
     }
 
     printf("Hello CatOS!\n");
+    printf("pg address:%x\n", &pg0[0]);
+    printf("pg0 %d\n", pg0[0]);
 }
