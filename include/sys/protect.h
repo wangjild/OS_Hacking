@@ -114,14 +114,19 @@
  * (7) AVL:  软件可利用位。80386对该位的使用未左规定，Intel公司也保证今后开发生产的处理器只要与80386兼容，就不会对该位的使用做任何定义或规定
  * */
 
-struct Segment {
+struct gdt_entry {
     uint16_t limit_low;     /* LIMIT 0-15   */
     uint16_t base_low;      /* BASE  0-15   */
     uint8_t base_mid;       /* BASE  16-23  */
     uint8_t attr_low;       /* TYPE:4 S:1 DPL:2 P:1 */
     uint8_t attr_limit_high;   /* LIMIT 16-19 AVL:1 Resvd:1 D/B:1 G:1  */
     uint8_t base_high;      /* BASE  24-32  */
-};
+} __attribute__((packed));
+
+struct gdt_ptr {
+    uint16_t limit;
+    uint32_t base;
+} __attribute__ ((packed));
 
 // G flag
 #define SEG_4K 0x80
@@ -157,9 +162,9 @@ struct Segment {
 #define SEG_IGATE   0x8E
 #define SEG_TGATE   0x8F
 
-typedef struct Gate {
+struct Gate {
         
-} Gate_t;
+} __attribute__((packed));
 
 // Gdt here
 Segment_t gdt[128];
