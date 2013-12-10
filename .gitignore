@@ -3,3 +3,4 @@
 *.bin
 opt
 disk.img
+*.swp

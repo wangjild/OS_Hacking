@@ -121,7 +121,7 @@ struct gdt_entry {
     uint8_t attr_low;       /* TYPE:4 S:1 DPL:2 P:1 */
     uint8_t attr_limit_high;   /* LIMIT 16-19 AVL:1 Resvd:1 D/B:1 G:1  */
     uint8_t base_high;      /* BASE  24-32  */
-} __attribute__((packed));
+} __attribute__ ((packed));
 
 struct gdt_ptr {
     uint16_t limit;
@@ -162,9 +162,17 @@ struct gdt_ptr {
 #define SEG_IGATE   0x8E
 #define SEG_TGATE   0x8F
 
+
+#define SEG_DUMMY    0
+#define SEG_KCODE_FLAT   1
+#define SEG_KDATA_FLAT   1
+
 struct gate_entry {
-        
+    uint16_t offset_low;
+    uint16_t selector;
+    uint8_t  dcount;
+    uint8_t  attr;
+    uint16_t offset_high;
 } __attribute__((packed));
 
-// IDT here
 #endif
