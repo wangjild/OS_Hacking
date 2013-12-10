@@ -1,11 +1,19 @@
 CFLAGS=-I ./include -I ./include/boot -fno-builtin
 
-kernel:
-	nasm -f elf -o ./boot/i386/loader.o	./boot/i386/loader.asm
-	gcc $(CFLAGS) -o lib/itoa.o -c lib/itoa.c 
-	gcc $(CFLAGS) -o lib/printf.o -c lib/printf.c
-	gcc $(CFLAGS) -o src/kernel.o -c src/kernel.c
-	ld -T linker.ld -o kernel.bin boot/i386/loader.o lib/itoa.o lib/printf.o src/kernel.o
+cobjects = lib/kstdlib.o lib/printk.o src/kernel.o src/protect.o
+
+objects = $(cobjects) loader.o
+
+all: kernel
+
+loader.o:
+	nasm -f elf -o loader.o ./boot/i386/loader.asm
+
+$(cobjects): %.o: %.c
+	gcc -c $(CFLAGS) $< -o $@
+
+kernel: $(objects)
+	ld -T linker.ld -o kernel.bin $(objects)
 
 install: kernel
 	sudo losetup	-o 32256 /dev/loop0 disk.img
@@ -19,4 +27,6 @@ install: kernel
 	sudo umount /mnt
 	sudo losetup -d /dev/loop0
 	sudo cat boot/grub/device-map | grub --device-map=/dev/null
-	
+
+clean:
+	rm -rf $(objects)	

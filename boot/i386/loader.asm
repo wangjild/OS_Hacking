@@ -28,6 +28,22 @@ loader:
 hang:
    hlt                            ; halt machine should kernel return
    jmp  hang
+
+global gdt_flush
+extern gdtptr
+extern kernel_code_selector
+extern kernel_data_selector
+gdt_flush:
+    lgdt [gdtptr]
+    mov ax, [kernel_data_selector]
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov ss, ax
+    jmp 0x08:flush2 ; Far jump! 
+flush2:
+    ret 
+
 section .bss
 align 32
 stack:
