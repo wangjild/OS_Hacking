@@ -138,7 +138,8 @@ kernel_main (unsigned long addr, unsigned long magic)
                 (unsigned) (mmap->len & 0x0ffffffff),
                 (unsigned) mmap->type);
     }
-
+    
+    setup_gdt();
     printk("Hello CatOS!\n");
     printk("pg address:%x\n", &pg0[0]);
     printk("pg0 %d\n", pg0[0]);
