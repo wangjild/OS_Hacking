@@ -26,7 +26,7 @@
 
 #ifndef _SYS_PROTECT_H_
 #define _SYS_PROTECT_H_
-#include <type.h>
+#include <sys/type.h>
 
 /* 
  *  @brief Data/Code Segment Descriptor 
@@ -165,9 +165,6 @@ struct gdt_ptr {
 struct Gate {
         
 } __attribute__((packed));
-
-// Gdt here
-Segment_t gdt[128];
 
 // IDT here
 #endif
