@@ -162,7 +162,7 @@ struct gdt_ptr {
 #define SEG_IGATE   0x8E
 #define SEG_TGATE   0x8F
 
-struct Gate {
+struct gate_entry {
         
 } __attribute__((packed));
 
