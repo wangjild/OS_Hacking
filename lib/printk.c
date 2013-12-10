@@ -1,12 +1,8 @@
 /*
    CopyRight
    */
-#include <kstdlib.h>
 #include <kstdio.h>
-
-void out_byte(uint16_t port, uint8_t val) {
-    __asm__ __volatile__ ("outb %1, %0" : : "dN" (port), "a"(val));
-}
+#include <kstdlib.h>
 
 /* Format a string and print it on the screen, just like the libc
    function printf. */
