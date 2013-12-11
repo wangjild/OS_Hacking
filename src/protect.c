@@ -28,8 +28,6 @@ void setup_gdt() {
     gdtptr.base = (uint32_t) &gdts;
     gdtptr.limit = GDT_OFFSET;
     
-    printk("code selector:%x\n", kernel_code_selector);
-    printk("data selector:%x\n", kernel_data_selector);
     set_gdt(SEG_DUMMY, 0, 0, 0); // DUMMY GDT
     set_gdt(SEG_KERNEL_C, 0, 0xFFFFFF, SEG_32 | SEG_4K | SEG_CAR); // KERNEL CODE GDT
     set_gdt(SEG_KERNEL_D, 0, 0xFFFFFF, SEG_32 | SEG_4K | SEG_DRW); // KERNEL DATA GDT

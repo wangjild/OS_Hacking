@@ -40,21 +40,13 @@ gdt_flush:
     mov es, ax
     mov fs, ax
     mov ss, ax
-<<<<<<< HEAD
     mov gs, ax
-=======
-    
-    mov ax, 0x08
-    mov cs, ax
->>>>>>> 1736c62721cc57ba87f90ba11bfb37215629dea8
 
-    jmp 0x08:flush2 ; Far jump! 
-flush2:
     mov ax, [kernel_code_selector]
-    mov cs, ax
-    jmp 0x08:flush3
-
-flush3:
+    mov word[SWITCH_TO + 5], ax
+SWITCH_TO:
+    jmp 0x0:flush2 ; Far jump! 
+flush2:
     ret 
 
 section .bss
