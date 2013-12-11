@@ -17,17 +17,19 @@ static void set_gdt(uint32_t idx, uint32_t base, uint32_t limit, uint16_t attr)
     gdts[idx].base_mid = (base >> 16) & 0x0FF;
     gdts[idx].base_high = (base >> 24) & 0x0FF;
     gdts[idx].limit_low = limit & 0x0FFFF;
-    gdts[idx].attr_limit_high = ((limit >> 16) & 0x0FF) | attr;
+    gdts[idx].attr_limit_high = ((limit >> 16) & 0x0F0) | attr;
 }
 extern void gdt_flush();
 
 void setup_gdt() {
     gdtptr.base = (uint32_t) &gdts;
     gdtptr.limit = GDT_OFFSET;
-
+    
+    printk("code selector:%x\n", kernel_code_selector);
+    printk("data selector:%x\n", kernel_data_selector);
     set_gdt(SEG_DUMMY, 0, 0, 0); // DUMMY GDT
     set_gdt(SEG_KERNEL_C, 0, 0x0FFFFF, SEG_32 | SEG_4K | SEG_CR); // KERNEL CODE GDT
-    set_gdt(SEG_KERNEL_C, 0, 0x0FFFFF, SEG_32 | SEG_4K | SEG_DRW); // KERNEL CODE GDT
+    set_gdt(SEG_KERNEL_D, 0, 0x0FFFFF, SEG_32 | SEG_4K | SEG_DRW); // KERNEL DATA GDT
     gdt_flush();
 }
 
