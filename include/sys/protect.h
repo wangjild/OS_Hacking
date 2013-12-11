@@ -166,9 +166,6 @@ struct gdt_ptr {
 #define SEG_KCODE_FLAT   1
 #define SEG_KDATA_FLAT   2
 
-#define SEG_KERNEL_C    SEG_KCODE_FLAT
-#define SEG_KERNEL_D    SEG_KDATA_FLAT
-
 struct gate_entry {
     uint16_t offset_low;
     uint16_t selector;

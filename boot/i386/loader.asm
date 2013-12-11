@@ -39,7 +39,11 @@ gdt_flush:
     mov ds, ax
     mov es, ax
     mov fs, ax
-    ;mov ss, ax
+    mov ss, ax
+    
+    mov ax, 0x08
+    mov cs, ax
+
     jmp 0x08:flush2 ; Far jump! 
 flush2:
     ret 
