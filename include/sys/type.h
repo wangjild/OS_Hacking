@@ -33,6 +33,11 @@
 typedef char int8_t;
 #endif
 
+#ifndef __size_t_defined
+#define __size_t_defined
+typedef unsigned int size_t;
+#endif
+
 typedef unsigned char uint8_t;
 typedef short int int16_t;
 typedef unsigned short int uint16_t;

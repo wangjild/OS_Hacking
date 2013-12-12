@@ -10,9 +10,6 @@ const uint16_t kernel_data_selector = SEG_KERNEL_D << 3;
 struct gdt_entry    gdts[GDT_OFFSET];
 struct gdt_ptr      gdtptr  = {0, GDT_OFFSET};
 
-#define IDT_OFFSET  256
-struct gate_entry   idts[IDT_OFFSET];
-
 static void set_gdt(uint32_t idx, uint32_t base, uint32_t limit, uint16_t attr) 
 {
     gdts[idx].base_low = base & 0x0FFFF;
@@ -25,8 +22,10 @@ static void set_gdt(uint32_t idx, uint32_t base, uint32_t limit, uint16_t attr)
 extern void gdt_flush();
 
 void setup_gdt() {
+    memset(&gdts, 0, sizeof(struct gdt_entry) * GDT_OFFSET);
+
     gdtptr.base = (uint32_t) &gdts;
-    gdtptr.limit = GDT_OFFSET;
+    gdtptr.limit = sizeof(gdts) - 1;
     
     set_gdt(SEG_DUMMY, 0, 0, 0); // DUMMY GDT
     set_gdt(SEG_KERNEL_C, 0, 0xFFFFFF, SEG_32 | SEG_4K | SEG_CAR); // KERNEL CODE GDT
@@ -34,10 +33,28 @@ void setup_gdt() {
     gdt_flush();
 }
 
-static void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
+#define IDT_OFFSET 256
+struct idt_entry idts[IDT_OFFSET];
+struct idt_ptr   idtptr;
 
+#define idt_load() { \
+    __asm__ __volatile__ ( \
+        "lidt %0" :: "m"(idtptr) \
+    ); \
+}
+
+static void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
+    idts[idx].base_low = base & 0x0FFFF;
+    idts[idx].base_high = (base >> 16) &0x0FFFF;
+    idts[idx].selector = selector;
+    idts[idx].flags = flags;
 }
 
 void setup_idt() {
-
+    memset(&idts, 0, sizeof(idts));
+    
+    idtptr.base = (uint32_t) &idts;
+    idtptr.limit = sizeof(idts) - 1;
+    printk("idts bytes:%d\n", idtptr.limit);
+    idt_load();
 }
