@@ -55,6 +55,5 @@ void setup_idt() {
     
     idtptr.base = (uint32_t) &idts;
     idtptr.limit = sizeof(idts) - 1;
-    printk("idts bytes:%d\n", idtptr.limit);
     idt_load();
 }
