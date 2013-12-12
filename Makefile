@@ -1,6 +1,6 @@
 CFLAGS=-I ./include -I ./include/boot -fno-builtin
 
-cobjects = lib/kstdlib.o lib/printk.o src/kernel.o src/protect.o
+cobjects = lib/kstdlib.o lib/printk.o src/kernel.o src/protect.o src/isr.o
 
 objects = $(cobjects) loader.o
 
