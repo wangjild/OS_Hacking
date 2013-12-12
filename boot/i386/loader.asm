@@ -40,7 +40,12 @@ gdt_flush:
     mov es, ax
     mov fs, ax
     mov ss, ax
-    jmp 0x08:flush2 ; Far jump! 
+    mov gs, ax
+
+    mov ax, [kernel_code_selector]
+    mov word[SWITCH_TO + 5], ax
+SWITCH_TO:
+    jmp 0x0:flush2 ; Far jump! 
 flush2:
     ret 
 

@@ -57,3 +57,9 @@ itoa (char *buf, int base, int d)
         p2--;
     }
 }
+
+void *memset(void *s, uint8_t c, size_t n) {
+    uint8_t *p = s;
+    while (n--) *p++ = (uint8_t) c;
+    return s;
+}

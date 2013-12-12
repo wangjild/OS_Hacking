@@ -166,9 +166,6 @@ struct gdt_ptr {
 #define SEG_KCODE_FLAT   1
 #define SEG_KDATA_FLAT   2
 
-#define SEG_KERNEL_C    SEG_KCODE_FLAT
-#define SEG_KERNEL_D    SEG_KDATA_FLAT
-
 struct gate_entry {
     uint16_t offset_low;
     uint16_t selector;
@@ -177,4 +174,16 @@ struct gate_entry {
     uint16_t offset_high;
 } __attribute__((packed));
 
+struct idt_entry {
+    uint16_t base_low;
+    uint16_t selector;
+    uint8_t  resved;
+    uint8_t  flags;
+    uint16_t base_high;
+} __attribute__ ((packed));
+
+struct idt_ptr {
+    uint16_t limit;
+    uint32_t base;
+} __attribute__ ((packed));
 #endif

@@ -140,7 +140,6 @@ kernel_main (unsigned long addr, unsigned long magic)
     }
     
     setup_gdt();
+    setup_idt();
     printk("Hello CatOS!\n");
-    printk("pg address:%x\n", &pg0[0]);
-    printk("pg0 %d\n", pg0[0]);
 }

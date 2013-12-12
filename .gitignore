@@ -4,3 +4,4 @@
 opt
 disk.img
 *.swp
+tools/bochs*
