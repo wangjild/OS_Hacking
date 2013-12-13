@@ -2,12 +2,14 @@ CFLAGS=-I ./include -I ./include/boot -fno-builtin
 
 cobjects = lib/kstdlib.o lib/printk.o src/kernel.o src/protect.o src/isr.o
 
-objects = $(cobjects) loader.o
+objects = $(cobjects) loader.o arch/i386/irpt.o
 
 all: kernel
 
 loader.o:
 	nasm -f elf -o loader.o ./boot/i386/loader.asm
+arch/i386/irpt.o:
+	nasm -f elf -o ./arch/i386/irpt.o ./arch/i386/irpt.asm
 
 $(cobjects): %.o: %.c
 	gcc -c $(CFLAGS) $< -o $@
