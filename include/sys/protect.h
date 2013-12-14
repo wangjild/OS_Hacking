@@ -175,15 +175,22 @@ struct gate_entry {
 } __attribute__((packed));
 
 struct idt_entry {
-    uint16_t base_low;
+    uint16_t offset_low;
     uint16_t selector;
     uint8_t  resved;
     uint8_t  flags;
-    uint16_t base_high;
+    uint16_t offset_high;
 } __attribute__ ((packed));
 
 struct idt_ptr {
     uint16_t limit;
     uint32_t base;
 } __attribute__ ((packed));
+
+#define IDT_DPL0    0x80
+#define IDT_DPL1    0xA0
+#define IDT_DPL2    0xC0
+#define IDT_DPL3    0xE0
+#define IDT_IRPT    0x0E
+#define IDT_TRAP    0x0F
 #endif

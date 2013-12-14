@@ -32,28 +32,3 @@ void setup_gdt() {
     set_gdt(SEG_KERNEL_D, 0, 0xFFFFFF, SEG_32 | SEG_4K | SEG_DRW); // KERNEL DATA GDT
     gdt_flush();
 }
-
-#define IDT_OFFSET 256
-struct idt_entry idts[IDT_OFFSET];
-struct idt_ptr   idtptr;
-
-#define idt_load() { \
-    __asm__ __volatile__ ( \
-        "lidt %0" :: "m"(idtptr) \
-    ); \
-}
-
-static void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
-    idts[idx].base_low = base & 0x0FFFF;
-    idts[idx].base_high = (base >> 16) &0x0FFFF;
-    idts[idx].selector = selector;
-    idts[idx].flags = flags;
-}
-
-void setup_idt() {
-    memset(&idts, 0, sizeof(idts));
-    
-    idtptr.base = (uint32_t) &idts;
-    idtptr.limit = sizeof(idts) - 1;
-    idt_load();
-}

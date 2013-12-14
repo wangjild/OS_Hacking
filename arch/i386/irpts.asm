@@ -19,24 +19,28 @@
 ;;   File:          irpts.asm
 ;;   Lauguage:      asm
 ;;   Date:          13-12-13 20:23:03
-;;   Descripton:    interrupt entries
+;;   Descripton:    interupts 0 - 32  entries
 
 [BITS 32]
 
 ;除0异常 
-global _divide0_error
+global divide0_error, general_protection
 
 extern _do_divide0_error
-_divide0_error:
+divide0_error:
     push    0x00 ; 当做错误码 push 入栈
     push    _do_divide0_error
     jmp     exception_handler
 
+extern _do_general_protection
+general_protection:
+    push    _do_general_protection
+    jmp     exception_handler
 
 extern kernel_data_selector
 exception_handler:
-    xchg    [esp+4],  eax
-    xchg    esp,    ebx
+    xchg    [esp+4],  eax       ; exchange errcode <-> eax
+    xchg    [esp],    ebx         ; exchange function <-> ebx
     push    ecx
     push    edx
     push    edi
@@ -45,14 +49,14 @@ exception_handler:
     push    ds
     push    es
     push    fs
-    push    eax
+    push    eax                 ; push errcode
     lea     eax,    [esp+44]
-    push    eax
+    push    eax                 ; push eip
     mov     eax,    [kernel_data_selector]
     mov     ds,     ax
     mov     es,     ax
     mov     fs,     ax
-    call    [ebx]
+    call    ebx
     add     esp,    0x08
     pop     fs
     pop     es

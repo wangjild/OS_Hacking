@@ -38,7 +38,6 @@ printk (const char *format, ...)
                     p = *arg++;
                     if (! p)
                         p = "(null)";
-
 string:
                     while (*p)
                         putchar (*p++);
