@@ -27,19 +27,80 @@
 #include <sys/protect.h>
 #include <sys/irpts.h>
 
-static void FATAL(const char* str, uint32_t* esp, uint32_t errcode) {
-    printk("EIP:\t%04x:%x\nEFLAGS:\t%04x\nESP:\t%04x:%x\n",
-        esp[1], esp[0], esp[2], esp[4], esp[3]);
+static void FATAL(const char* str, struct irpt_regs* regs) {
+    printk("EIP:    %x:%x\nEFLAGS:    %x\nESP:    %x:%x\n",
+        regs->cs, regs->eip, regs->eflags, regs->es, regs->uesp);
     for (;;) ;
 }
 
-void _do_divide0_error(uint32_t esp, uint32_t errcode) {
-    FATAL("divide 0 error", (uint32_t*) esp, errcode);
+void _do_divide0_error(struct irpt_regs* regs) {
+    FATAL("int0: divide 0 error", regs);
 }
 
-void _do_general_protection(uint32_t esp, uint32_t errcode) {
-    FATAL("general protection", (uint32_t*) esp, errcode);
+void _do_debug(struct irpt_regs* regs) {
+    FATAL("int1: debug", regs);
 }
+
+void _do_nmi(struct irpt_regs* regs) {
+    FATAL("int2: nmi", regs);
+}
+
+void _do_debug_break(struct irpt_regs* regs) {
+    FATAL("int3: break", regs);
+}
+
+void _do_overflow(struct irpt_regs* regs) {
+    FATAL("int4: overflow", regs);
+}
+
+void _do_bounds_check(struct irpt_regs* regs) {
+    FATAL("int5: bounds_check", regs);
+}
+
+void _do_invalid_op(struct irpt_regs* regs) {
+    FATAL("int6: invalid op", regs);
+}
+
+void _do_device_fail(struct irpt_regs* regs) {
+    FATAL("int7: device fail", regs);
+}
+
+void _do_double_fault(struct irpt_regs* regs) {
+    FATAL("int8: double fault", regs);
+}
+
+void _do_cop_segment(struct irpt_regs* regs) {
+    FATAL("int9: coprocesser segment", regs);
+}
+
+void _do_tss_inval(struct irpt_regs* regs) {
+    FATAL("int10: tss invalid", regs);
+}
+
+void _do_segment_unpresent(struct irpt_regs* regs) {
+    FATAL("int11: segment unpresent", regs);
+}
+
+void _do_stack_segment(struct irpt_regs* regs) {
+    FATAL("int12: stack segment unpresent or overflow", regs);
+}
+
+void _do_general_protection(struct irpt_regs* regs) {
+    FATAL("int13: general protection", regs);
+}
+
+void _do_page_fault(struct irpt_regs* regs) {
+    FATAL("int14: page fault", regs);
+}
+
+void _do_reserved(struct irpt_regs* regs) {
+    FATAL("int15: reserved", regs);
+}
+
+void _do_cop_error(struct irpt_regs* regs) {
+    FATAL("int16: coprocesser error", regs);
+}
+
 
 #define IDT_OFFSET 256
 struct idt_entry idts[IDT_OFFSET];
@@ -69,7 +130,7 @@ void setup_idt() {
     idtptr.limit = sizeof(idts) - 1;
     
     set_idt(0, (uint32_t) &divide0_error, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
+    set_idt(13, (uint32_t) &general_protection, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
     
     idt_load();
-    //set_idt(13, (uint32_t) &general_protection, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
 }

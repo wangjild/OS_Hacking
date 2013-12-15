@@ -1,13 +1,13 @@
 CFLAGS=-I ./include -I ./include/boot -fno-builtin
 
-cobjects = lib/kstdlib.o lib/printk.o src/kernel.o src/protect.o src/irpts.o
+cobjects = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o
 
-objects = $(cobjects) loader.o arch/i386/irpts.o
+objects = $(cobjects) boot/i386/loader.o arch/i386/irpts.o
 
 all: kernel
 
-loader.o:
-	nasm -f elf -o loader.o ./boot/i386/loader.asm
+boot/i386/loader.o:
+	nasm -f elf -o boot/i386/loader.o ./boot/i386/loader.asm
 arch/i386/irpts.o:
 	nasm -f elf -o ./arch/i386/irpts.o ./arch/i386/irpts.asm
 
