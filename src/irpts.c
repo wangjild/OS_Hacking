@@ -27,78 +27,80 @@
 #include <sys/protect.h>
 #include <sys/irpts.h>
 
-static void FATAL(const char* str, struct irpt_regs* regs) {
+static void FATAL(const char* str, uint32_t errcode, struct irpt_regs* regs) {
+    printk("current:%x\n", regs);
     printk("EIP:    %x:%x\nEFLAGS:    %x\nESP:    %x:%x\n",
         regs->cs, regs->eip, regs->eflags, regs->es, regs->uesp);
+    printk("ES:%x\n", regs->es);
     for (;;) ;
 }
 
-void _do_divide0_error(struct irpt_regs* regs) {
-    FATAL("int0: divide 0 error", regs);
+void _do_divide0_error(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int0: divide 0 error", errcode, regs);
 }
 
-void _do_debug(struct irpt_regs* regs) {
-    FATAL("int1: debug", regs);
+void _do_debug(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int1: debug", errcode, regs);
 }
 
-void _do_nmi(struct irpt_regs* regs) {
-    FATAL("int2: nmi", regs);
+void _do_nmi(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int2: nmi", errcode, regs);
 }
 
-void _do_debug_break(struct irpt_regs* regs) {
-    FATAL("int3: break", regs);
+void _do_debug_break(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int3: break", errcode, regs);
 }
 
-void _do_overflow(struct irpt_regs* regs) {
-    FATAL("int4: overflow", regs);
+void _do_overflow(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int4: overflow", errcode, regs);
 }
 
-void _do_bounds_check(struct irpt_regs* regs) {
-    FATAL("int5: bounds_check", regs);
+void _do_bounds_check(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int5: bounds_check", errcode, regs);
 }
 
-void _do_invalid_op(struct irpt_regs* regs) {
-    FATAL("int6: invalid op", regs);
+void _do_invalid_op(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int6: invalid op", errcode, regs);
 }
 
-void _do_device_fail(struct irpt_regs* regs) {
-    FATAL("int7: device fail", regs);
+void _do_device_fail(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int7: device fail", errcode, regs);
 }
 
-void _do_double_fault(struct irpt_regs* regs) {
-    FATAL("int8: double fault", regs);
+void _do_double_fault(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int8: double fault", errcode, regs);
 }
 
-void _do_cop_segment(struct irpt_regs* regs) {
-    FATAL("int9: coprocesser segment", regs);
+void _do_cop_segment(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int9: coprocesser segment", errcode, regs);
 }
 
-void _do_tss_inval(struct irpt_regs* regs) {
-    FATAL("int10: tss invalid", regs);
+void _do_tss_inval(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int10: tss invalid", errcode, regs);
 }
 
-void _do_segment_unpresent(struct irpt_regs* regs) {
-    FATAL("int11: segment unpresent", regs);
+void _do_segment_unpresent(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int11: segment unpresent", errcode, regs);
 }
 
-void _do_stack_segment(struct irpt_regs* regs) {
-    FATAL("int12: stack segment unpresent or overflow", regs);
+void _do_stack_segment(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int12: stack segment unpresent or overflow", errcode, regs);
 }
 
-void _do_general_protection(struct irpt_regs* regs) {
-    FATAL("int13: general protection", regs);
+void _do_general_protection(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int13: general protection", errcode, regs);
 }
 
-void _do_page_fault(struct irpt_regs* regs) {
-    FATAL("int14: page fault", regs);
+void _do_page_fault(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int14: page fault", errcode, regs);
 }
 
-void _do_reserved(struct irpt_regs* regs) {
-    FATAL("int15: reserved", regs);
+void _do_reserved(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int15: reserved", errcode, regs);
 }
 
-void _do_cop_error(struct irpt_regs* regs) {
-    FATAL("int16: coprocesser error", regs);
+void _do_cop_error(uint32_t errcode, struct irpt_regs* regs) {
+    FATAL("int16: coprocesser error", errcode, regs);
 }
 
 
@@ -120,8 +122,25 @@ static void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flag
 }
 
 extern const uint16_t kernel_code_selector;
-void divide0_error();
-void general_protection();
+
+extern void divide0_error();
+extern void debug();
+extern void nmi();
+extern void debug_break();
+extern void overflow();
+extern void bounds_check();
+extern void invalid_op();
+extern void device_fail();
+extern void double_fault();
+extern void cop_segment();
+extern void tss_inval();
+extern void segment_unpresent();
+extern void stack_segment();
+extern void general_protection();
+extern void page_fault();
+extern void reserved();
+extern void cop_error();
+extern void exception_handler();
 
 void setup_idt() {
     memset(&idts, 0, sizeof(idts));
@@ -130,6 +149,9 @@ void setup_idt() {
     idtptr.limit = sizeof(idts) - 1;
     
     set_idt(0, (uint32_t) &divide0_error, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
+    set_idt(1, (uint32_t) &debug, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
+    set_idt(2, (uint32_t) &nmi, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
+    set_idt(3, (uint32_t) &debug_break, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
     set_idt(13, (uint32_t) &general_protection, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
     
     idt_load();

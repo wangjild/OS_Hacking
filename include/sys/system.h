@@ -25,11 +25,3 @@
  */
 
 #include <sys/types.h>
-struct irpt_regs
-{
-    uint32_t    err_code;  /* push */
-    uint32_t    fs, es, ds; /* 压入上一个段。 */
-    uint32_t    ebp, esi, edi, edx, ecx; /* 由push 压入*/
-    uint32_t    ebx, eax;   /* 由exchange 压入*/
-    uint32_t    eip, cs, eflags, uesp, ss; /* 由处理器自动压入。 */ 
-};

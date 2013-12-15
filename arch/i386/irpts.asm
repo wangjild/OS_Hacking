@@ -162,9 +162,10 @@ exception_handler:
     push    ds
     push    es
     push    fs
+    push    esp
     push    eax                 ; push errcode
-    lea     eax,    [esp+44]
-    push    eax                 ; push eip
+    ;lea     eax,    [esp+44]
+    ;push    eax                 ; push eip
     mov     eax,    [kernel_data_selector]
     mov     ds,     ax
     mov     es,     ax
