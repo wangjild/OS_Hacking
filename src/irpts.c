@@ -28,10 +28,10 @@
 #include <sys/irpts.h>
 
 static void FATAL(const char* str, uint32_t errcode, struct irpt_regs* regs) {
-    printk("current:%x\n", regs);
-    printk("EIP:    %x:%x\nEFLAGS:    %x\nESP:    %x:%x\n",
+    printk("[FATAL] %s\n", str);
+    printk("EIP:    %x:%x\nEFLAGS: %x\nESP:    %x:%x\n",
         regs->cs, regs->eip, regs->eflags, regs->es, regs->uesp);
-    printk("ES:%x\n", regs->es);
+    printk("ES:     %x\n", regs->es);
     for (;;) ;
 }
 
