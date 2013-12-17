@@ -26,8 +26,9 @@
 #include <kstdlib.h>
 
 #include <sys/i8259.h>
-#include <sys/mm.h>
-     
+//#include <sys/mm.h>
+#include <sys/irpts.h>
+
 /* Macros. */
      
 /* Check if the bit BIT in FLAGS is set. */

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013  Wang Jing
+ *  Copyright (C) 2013  Wang Jing <wangjild@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,19 +18,34 @@
 /*
  *   Author:        wangjild <wangjild@gmail.com>
  *   Github:        https://github.com/wangjild/OS_Hacking
- *   File:          protect.h
+ *   File:          sys/page.h
  *   Lauguage:      c/cpp
- *   Date:          13-12-09 21:32:41
- *   Descripton:    header files for memory manage
+ *   Date:          13-12-02 21:56:23
+ *   Descripton:    page structure 
  */
 
-#ifndef _SYS_PROTECT_H_
-#define _SYS_PROTECT_H_
+
+#ifndef _SYS_PAGE_H_
+#define _SYS_PAGE_H_
 
 #include <sys/type.h>
 
 typedef uint32_t pg_t;
 
-extern pg_t pg0[];
+#define PG_DIR_SIZE (1 << 10)
+#define PG_TBL_SIZE PG_DIR_SIZE
+
+typedef struct pgdir {
+    union {
+        pg_t dir[PG_DIR_SIZE];
+        pg_t tbl[PG_DIR_SIZE];
+    }
+} pgdir_t;
+
+typedef pgdir_t pgtbl_t;
+extern pgdir_t  g_pgdir;
+extern pgtbl_t  g_pgtbl[0]; // max 4G
+void setup_page (void) ;
+
 
 #endif
