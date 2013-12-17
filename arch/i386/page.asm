@@ -23,4 +23,5 @@
 
 
 [BITS 32]
-[.section data]
+[SECTION .page]
+pg0 db 0

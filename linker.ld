@@ -16,9 +16,8 @@ SECTIONS{
 		*(.bss)
 		ebss = . ;
 	}
-
+    .page   ALIGN   (0x04) : {
+        *(.page)
+    }
 	_end = . ;
-	/* page dir and table here */
-	. = ALIGN(4096);
-    pg0 = . ;
 }
