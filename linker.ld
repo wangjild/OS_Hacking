@@ -17,10 +17,10 @@ SECTIONS{
 		ebss = . ;
 	}
 
-    .pgdir.data   ALIGN   (0x04) : {
+    .pgdir.data   ALIGN   (0x01000) : {
         *(.pgdir.data)
     }
-    .pgtbl.data   ALIGN   (0x04) : {
+    .pgtbl.data   ALIGN   (0x01000) : {
         *(.pgtbl.data)
     }
 	_end = . ;

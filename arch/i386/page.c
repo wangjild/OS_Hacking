@@ -13,10 +13,11 @@ pgtbl_t g_pgtbl[2] __pgtbl;
 }
 
 #define fill_page_tbl(idx, phy_addr_start, attr) { \
-    int i = 0; int start = (phy_addr_start & 0xFFFFF000); \
-    while (i < PG_TBL_SIZE) { \
-        set_page_tbl(idx, i, start + (i << __PG_OFFSET__), attr); \
-        ++i; \
+    int tbli = 0; int start = (phy_addr_start & 0xFFFFF000); \
+    printk("phy_addr_start:%x\n", start); \
+    while (tbli < PG_TBL_SIZE) { \
+        set_page_tbl(idx, tbli, start + (tbli << __PG_OFFSET__), attr); \
+        ++tbli; \
     } \
 }
 
@@ -40,7 +41,7 @@ void setup_paging(void) {
     }
 
     i = 0;
-    for (; i < 4; ++i) {
+    for (; i < 2; ++i) {
         fill_page_tbl(i, PHY_ADDR_START + i << (__PG_OFFSET__ + 10), 0x07); /* pg0 0K - 4K */
     }
 

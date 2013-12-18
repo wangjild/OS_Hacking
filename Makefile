@@ -1,6 +1,6 @@
 ARCH=i386
 
-CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin
+CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -g
 
 cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o
 asmobj = boot/$(ARCH)/loader.o arch/$(ARCH)/irpts.o

@@ -144,7 +144,7 @@ kernel_main (unsigned long addr, unsigned long magic)
 
 
     setup_gdt();
+    setup_idt();
     setup_paging();
     printk("Hello CatOS!\n");
-    setup_idt();
 }
