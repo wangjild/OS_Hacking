@@ -28,6 +28,7 @@
 #include <sys/i8259.h>
 //#include <sys/mm.h>
 #include <sys/irpts.h>
+#include <arch/i386/page.h>
 
 /* Macros. */
      
@@ -140,8 +141,10 @@ kernel_main (unsigned long addr, unsigned long magic)
                 (unsigned) mmap->type);
     }
     
+
+
     setup_gdt();
-    setup_idt();
-    printk("%d\n", 10 / 0);
+    setup_paging();
     printk("Hello CatOS!\n");
+    setup_idt();
 }

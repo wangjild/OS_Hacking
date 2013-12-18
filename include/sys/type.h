@@ -51,7 +51,15 @@ typedef unsigned long long uint64_t;
 #endif
 
 #ifndef __pgdir
-#define __pgdir  __section(.pgdir.data)
+#define __pgdir __section(.pgdir.data)
+#endif
+
+#ifndef __pgtbl
+#define __pgtbl __section(.pgtbl.data)
+#endif
+
+#ifndef __init
+#define __init  __section(.init.text)
 #endif
 
 #endif

@@ -35,17 +35,22 @@ typedef uint32_t pg_t;
 #define PG_DIR_SIZE (1 << 10)
 #define PG_TBL_SIZE PG_DIR_SIZE
 
+#define __PG_OFFSET__   12
+
 typedef struct pgdir {
-    union {
-        pg_t dir[PG_DIR_SIZE];
-        pg_t tbl[PG_DIR_SIZE];
-    }
+    pg_t item[PG_DIR_SIZE];
 }pgdir_t;
 
 typedef pgdir_t pgtbl_t;
-extern pgdir_t  g_pgdir;
-extern pgtbl_t  g_pgtbl[0]; // max 4G
-void setup_page (void) ;
+extern pgdir_t  g_pgdir __pgdir;
+extern pgtbl_t  g_pgtbl[2] __pgtbl; // max 4G
 
+#define KERNEL_VIR_OFFSET 0x00
+#define vir2phys(viraddr) ((uint32_t) viraddr) - KERNEL_VIR_OFFSET
+
+#define KERNEL_DIR_SIDX   (KERNEL_VIR_OFFSET >> 20)
+#define KERNEL_DIR_EIDX   PG_DIR_SIZE
+
+void setup_page (void) ;
 
 #endif

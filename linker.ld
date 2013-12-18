@@ -16,8 +16,12 @@ SECTIONS{
 		*(.bss)
 		ebss = . ;
 	}
-    .page   ALIGN   (0x04) : {
-        *(.page)
+
+    .pgdir.data   ALIGN   (0x04) : {
+        *(.pgdir.data)
+    }
+    .pgtbl.data   ALIGN   (0x04) : {
+        *(.pgtbl.data)
     }
 	_end = . ;
 }
