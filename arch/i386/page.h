@@ -40,7 +40,7 @@ typedef struct pgdir {
         pg_t dir[PG_DIR_SIZE];
         pg_t tbl[PG_DIR_SIZE];
     }
-} pgdir_t;
+}pgdir_t;
 
 typedef pgdir_t pgtbl_t;
 extern pgdir_t  g_pgdir;

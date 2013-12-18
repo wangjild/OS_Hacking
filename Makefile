@@ -1,19 +1,17 @@
-CFLAGS=-I ./include -I ./include/boot -fno-builtin
+ARCH=i386
 
-cobjects = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o
+CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin
 
-objects = $(cobjects) boot/i386/loader.o arch/i386/irpts.o arch/i386/page.o
+cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o
+asmobj = boot/$(ARCH)/loader.o arch/$(ARCH)/irpts.o
+objects = $(cobj) $(asmobj)
 
 all: kernel.bin
 
-boot/i386/loader.o:
-	nasm -f elf -o boot/i386/loader.o ./boot/i386/loader.asm
-arch/i386/irpts.o:
-	nasm -f elf -o ./arch/i386/irpts.o ./arch/i386/irpts.asm
-arch/i386/page.o:
-	nasm -f elf -o $@ ./arch/i386/page.asm
+$(asmobj): %.o: %.asm
+	nasm -f elf -o $@ $<
 
-$(cobjects): %.o: %.c
+$(cobj): %.o: %.c
 	gcc -c $(CFLAGS) $< -o $@
 
 kernel.bin: $(objects)

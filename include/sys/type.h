@@ -46,4 +46,12 @@ typedef unsigned int uint32_t;
 typedef long long int64_t;
 typedef unsigned long long uint64_t;
 
+#ifndef __section
+#define __section(SEC_NAME) __attribute__((__section__(#SEC_NAME)))
+#endif
+
+#ifndef __pgdir
+#define __pgdir  __section(.pgdir.data)
+#endif
+
 #endif
