@@ -8,6 +8,8 @@ FLAGS	equ	MODULEALIGN | MEMINFO
 MAGIC	equ	0x1BADB002
 CHECKSUM    equ -(MAGIC + FLAGS)
 
+KERNEL_OFFSET equ 0xC0000000
+
 section .__mbHeader
 align 4
 MultiBootHeader:
@@ -19,7 +21,7 @@ MultiBootHeader:
 section .text
 STACKSIZE equ 0x4000              ; that's 16k.
 loader:
-    mov esp, stack+STACKSIZE      ; set up the stack
+    mov esp, stack+STACKSIZE - KERNEL_OFFSET      ; set up the stack
     finit                         ; initialize FPU
     mov	eax,	0x2BADB002
     push eax                      ; pass Multiboot magic number
@@ -36,15 +38,16 @@ extern gdtptr
 extern kernel_code_selector
 extern kernel_data_selector
 gdt_flush:
-    lgdt [gdtptr]
-    mov ax, [kernel_data_selector]
+    lgdt [gdtptr-KERNEL_OFFSET]
+    xor eax, eax
+    mov ax, [kernel_data_selector-KERNEL_OFFSET]
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov ss, ax
     mov gs, ax
 
-    mov ax, [kernel_code_selector]
+    mov ax, [kernel_code_selector-KERNEL_OFFSET]
     mov word[SWITCH_TO + 5], ax
 SWITCH_TO:
     jmp 0x0:flush2 ; Far jump! 
