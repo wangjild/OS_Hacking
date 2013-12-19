@@ -15,7 +15,7 @@ $(cobj): %.o: %.c
 	gcc -c $(CFLAGS) $< -o $@
 
 kernel.bin: $(objects)
-	ld -T linker.ld -o $@ $^
+	ld -T linker.ld --cref -Map krnl.map -o $@ $^
 
 install: kernel.bin
 	sudo losetup	-o 32256 /dev/loop0 disk.img
