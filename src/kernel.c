@@ -43,7 +43,7 @@ pointed by ADDR. */
 void
 kernel_main (unsigned long addr, unsigned long magic)
 {
-#if 0
+    #if 0
     multiboot_info_t *mbi;
      
     /* Clear the screen. */
@@ -143,7 +143,6 @@ kernel_main (unsigned long addr, unsigned long magic)
     }
     
 #endif
-
     setup_gdt();
     setup_idt();
     setup_paging();
