@@ -45,10 +45,13 @@ typedef pgdir_t pgtbl_t;
 extern pgdir_t  g_pgdir __pgdir;
 extern pgtbl_t  g_pgtbl[2] __pgtbl; // max 4G
 
-#define KERNEL_VIR_OFFSET 0xC0000000
-#define vir2phys(viraddr) ((uint32_t) viraddr) - KERNEL_VIR_OFFSET
+#ifndef KERNEL_OFFSET
+#define KERNEL_OFFSET 0x00000000
+#endif
 
-#define KERNEL_DIR_SIDX   (KERNEL_VIR_OFFSET >> 20)
+#define vir2phys(viraddr) ((uint32_t) viraddr) - KERNEL_OFFSET
+
+#define KERNEL_DIR_SIDX   (KERNEL_OFFSET >> 20)
 #define KERNEL_DIR_EIDX   PG_DIR_SIZE
 
 void setup_page (void) ;

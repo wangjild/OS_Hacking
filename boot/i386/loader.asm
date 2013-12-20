@@ -8,9 +8,7 @@ FLAGS	equ	MODULEALIGN | MEMINFO
 MAGIC	equ	0x1BADB002
 CHECKSUM    equ -(MAGIC + FLAGS)
 
-KERNEL_OFFSET equ 0xC0000000
-
-section .__mbHeader
+section .mbh.text
 align 4
 MultiBootHeader:
    dd MAGIC

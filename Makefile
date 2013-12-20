@@ -1,6 +1,8 @@
 ARCH=i386
 
-CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -g
+VMODE=-DKERNEL_OFFSET=0x00000000
+
+CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin
 
 cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o
 asmobj = boot/$(ARCH)/loader.o arch/$(ARCH)/irpts.o
@@ -9,10 +11,10 @@ objects = $(cobj) $(asmobj)
 all: kernel.bin
 
 $(asmobj): %.o: %.asm
-	nasm -f elf -o $@ $<
+	nasm $(VMODE) -f elf -o $@ $<
 
 $(cobj): %.o: %.c
-	gcc -c $(CFLAGS) $< -o $@
+	gcc -c $(VMODE) $(CFLAGS) $< -o $@
 
 kernel.bin: $(objects)
 	ld -T linker.ld --cref -Map kernel.map -o $@ $^

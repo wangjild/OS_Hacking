@@ -1,18 +1,16 @@
 OUTPUT_ARCH("i386")
 ENTRY (loader)
-KERNEL_OFFSET   = 0xC0000000;  /* 3G */
+KERNEL_OFFSET   = 0x00000000;  /* 3G */
 KERNEL_PHYADDR  = 0x00100000;  /* 1M */
-KERNEL_VIRADDR  = 0xC0100004;  /* 1M */
+KERNEL_VIRADDR  = KERNEL_OFFSET +  KERNEL_PHYADDR + 12; /* 3G 1M */
 
 SECTIONS{
 	. = KERNEL_PHYADDR;
-    .__mbHeader : {
-        *(.__mbHeader)
-        . = ALIGN(4096);
+    .mbh.text : {
+        *(.mbh.text)
     }
-
     . = KERNEL_VIRADDR; 
-    .text   ALIGN(4096) : AT(ADDR(.text) - KERNEL_OFFSET) {
+    .text   ALIGN(0x4) : AT(ADDR(.text) - KERNEL_OFFSET) {
 		*(.text)
 	}
 	.rodata	ALIGN (0x1000) : AT(ADDR(.rodata) - KERNEL_OFFSET) {
