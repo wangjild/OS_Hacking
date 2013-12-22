@@ -23,7 +23,7 @@ Linker script and memory map
  .mbh.text      0x0000000000100000       0x2a boot/i386/loader.o
                 0x00000000c010002a                . = (. + KERNEL_OFFSET)
 
-.text           0x00000000c010002c      0xa27 load address 0x000000000010002c
+.text           0x00000000c010002c      0xa47 load address 0x000000000010002c
  *(.text)
  .text          0x00000000c010002c      0x149 lib/kstdlib.o
                 0x00000000c010002c                in_byte
@@ -36,60 +36,60 @@ Linker script and memory map
                 0x00000000c010026e                putchar
                 0x00000000c0100322                cls
  *fill*         0x00000000c010036d        0x3 00
- .text          0x00000000c0100370       0x23 src/kernel.o
+ .text          0x00000000c0100370       0x3f src/kernel.o
                 0x00000000c0100370                kernel_main
- *fill*         0x00000000c0100393        0x1 00
- .text          0x00000000c0100394       0xb7 src/protect.o
-                0x00000000c0100394                setup_gdt
- *fill*         0x00000000c010044b        0x1 00
- .text          0x00000000c010044c      0x419 src/irpts.o
-                0x00000000c01004bd                _do_divide0_error
-                0x00000000c01004df                _do_debug
-                0x00000000c0100501                _do_nmi
-                0x00000000c0100523                _do_debug_break
-                0x00000000c0100545                _do_overflow
-                0x00000000c0100567                _do_bounds_check
-                0x00000000c0100589                _do_invalid_op
-                0x00000000c01005ab                _do_device_fail
-                0x00000000c01005cd                _do_double_fault
-                0x00000000c01005ef                _do_cop_segment
-                0x00000000c0100611                _do_tss_inval
-                0x00000000c0100633                _do_segment_unpresent
-                0x00000000c0100655                _do_stack_segment
-                0x00000000c0100677                _do_general_protection
-                0x00000000c0100699                _do_page_fault
-                0x00000000c01006bb                _do_reserved
-                0x00000000c01006dd                _do_cop_error
-                0x00000000c0100750                setup_idt
- *fill*         0x00000000c0100865        0x3 00
- .text          0x00000000c0100868       0x75 arch/i386/page.o
-                0x00000000c0100868                setup_paging
- *fill*         0x00000000c01008dd        0x3 00
- .text          0x00000000c01008e0       0x64 boot/i386/loader.o
-                0x00000000c01008e0                loader
-                0x00000000c0100917                gdt_flush
- *fill*         0x00000000c0100944        0xc 00
- .text          0x00000000c0100950      0x103 arch/i386/irpts.o
-                0x00000000c0100950                divide0_error
-                0x00000000c010095f                debug
-                0x00000000c010096e                nmi
-                0x00000000c010097d                debug_break
-                0x00000000c010098c                overflow
-                0x00000000c010099b                bounds_check
-                0x00000000c01009aa                invalid_op
-                0x00000000c01009b9                device_fail
-                0x00000000c01009c3                double_fault
-                0x00000000c01009cd                cop_segment
-                0x00000000c01009d7                tss_inval
-                0x00000000c01009e1                segment_unpresent
-                0x00000000c01009eb                stack_segment
-                0x00000000c01009f5                general_protection
-                0x00000000c01009ff                page_fault
-                0x00000000c0100a09                reserved
-                0x00000000c0100a18                cop_error
+ *fill*         0x00000000c01003af        0x1 00
+ .text          0x00000000c01003b0       0xb7 src/protect.o
+                0x00000000c01003b0                setup_gdt
+ *fill*         0x00000000c0100467        0x1 00
+ .text          0x00000000c0100468      0x419 src/irpts.o
+                0x00000000c01004d9                _do_divide0_error
+                0x00000000c01004fb                _do_debug
+                0x00000000c010051d                _do_nmi
+                0x00000000c010053f                _do_debug_break
+                0x00000000c0100561                _do_overflow
+                0x00000000c0100583                _do_bounds_check
+                0x00000000c01005a5                _do_invalid_op
+                0x00000000c01005c7                _do_device_fail
+                0x00000000c01005e9                _do_double_fault
+                0x00000000c010060b                _do_cop_segment
+                0x00000000c010062d                _do_tss_inval
+                0x00000000c010064f                _do_segment_unpresent
+                0x00000000c0100671                _do_stack_segment
+                0x00000000c0100693                _do_general_protection
+                0x00000000c01006b5                _do_page_fault
+                0x00000000c01006d7                _do_reserved
+                0x00000000c01006f9                _do_cop_error
+                0x00000000c010076c                setup_idt
+ *fill*         0x00000000c0100881        0x3 00
+ .text          0x00000000c0100884       0x75 arch/i386/page.o
+                0x00000000c0100884                setup_paging
+ *fill*         0x00000000c01008f9        0x7 00
+ .text          0x00000000c0100900       0x64 boot/i386/loader.o
+                0x00000000c0100900                loader
+                0x00000000c0100937                gdt_flush
+ *fill*         0x00000000c0100964        0xc 00
+ .text          0x00000000c0100970      0x103 arch/i386/irpts.o
+                0x00000000c0100970                divide0_error
+                0x00000000c010097f                debug
+                0x00000000c010098e                nmi
+                0x00000000c010099d                debug_break
+                0x00000000c01009ac                overflow
+                0x00000000c01009bb                bounds_check
+                0x00000000c01009ca                invalid_op
+                0x00000000c01009d9                device_fail
+                0x00000000c01009e3                double_fault
+                0x00000000c01009ed                cop_segment
+                0x00000000c01009f7                tss_inval
+                0x00000000c0100a01                segment_unpresent
+                0x00000000c0100a0b                stack_segment
+                0x00000000c0100a15                general_protection
+                0x00000000c0100a1f                page_fault
+                0x00000000c0100a29                reserved
+                0x00000000c0100a38                cop_error
 
-.iplt           0x00000000c0100a54        0x0 load address 0x0000000000100a54
- .iplt          0x00000000c0100a54        0x0 lib/kstdio.o
+.iplt           0x00000000c0100a74        0x0 load address 0x0000000000100a74
+ .iplt          0x00000000c0100a74        0x0 lib/kstdio.o
 
 .rodata         0x00000000c0101000      0x1b4 load address 0x0000000000101000
  *(.rodata)
@@ -275,6 +275,7 @@ segment_unpresent                                 arch/i386/irpts.o
 setup_gdt                                         src/protect.o
                                                   src/kernel.o
 setup_idt                                         src/irpts.o
+                                                  src/kernel.o
 setup_paging                                      arch/i386/page.o
                                                   src/kernel.o
 stack_segment                                     arch/i386/irpts.o

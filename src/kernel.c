@@ -143,10 +143,10 @@ kernel_main (unsigned long addr, unsigned long magic)
     }
     
 #endif
-    //init_paging();
     setup_paging();
     setup_gdt();
     cls();
     printk("Hello CatOS!\n");
-    //setup_idt();
+    setup_idt();
+    int a = 10 / 0;
 }
