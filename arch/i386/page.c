@@ -1,49 +1,28 @@
 #include <sys/type.h>
 #include <arch/i386/page.h>
 
-pgdir_t g_pgdir __pgdir;
-pgtbl_t g_pgtbl[2] __pgtbl;
+pg_t g_pgdir[PG_DIR_SIZE] __pgdir;
+pg_t g_pg0[PG_TBL_SIZE] __pgtbl;
 
-#define set_page_dir(i, pg_tbl_addr, attr) { \
-    *((pg_t*) vir2phys(&g_pgdir.item[i])) = (vir2phys(pg_tbl_addr) & 0xFFFFF000) | (attr & 0x00000FFF); \
-}
-
-#define set_page_tbl(i, j, phy_addr, attr) { \
-    *((pg_t*) vir2phys(&g_pgtbl[i].item[j])) = (phy_addr  & 0xFFFFF000) | (attr & 0x00000FFF); \
-}
-
-#define fill_page_tbl(idx, phy_addr_start, attr) { \
-    int tbli = 0; int start = (phy_addr_start & 0xFFFFF000); \
-    printk("phy_addr_start:%x\n", start); \
-    while (tbli < PG_TBL_SIZE) { \
-        set_page_tbl(idx, tbli, start + (tbli << __PG_OFFSET__), attr); \
-        ++tbli; \
-    } \
-}
-
-#define PHY_ADDR_START 0x00
-
-#define enable_paging() { \
-    __asm__ __volatile__ ( \
-        "movl %0, %%eax\n\t" \
-        "movl %%eax, %%cr3\n\t" \
-        "movl %%cr0, %%eax\n\t" \
-        "orl  $0x80000000, %%eax\n\t" \
-        "movl %%eax, %%cr0\n\t" :: "a"(vir2phys(&g_pgdir)) \
-    ); \
-}
+#define hh2phys(viraddr) (((void*) viraddr) + 0x0 - KERNEL_OFFSET)
 
 void setup_paging(void) {
-    int idx = 0;
-    int i = KERNEL_DIR_SIDX;
-    for ( ; i < KERNEL_DIR_EIDX && idx < 2; i++, idx++) {
-        set_page_dir(i, &(g_pgtbl[idx]), 0x7);
+    void *pgdirptr = hh2phys(g_pgdir);
+    void *pg0ptr = hh2phys(g_pg0);
+    int k;
+    for(k = 0; k < PG_TBL_SIZE; ++k) {
+        g_pg0[k] = (uint32_t) (k * (1<<__PG_OFFSET__)) | 0x3;
+        g_pgdir[k] = (uint32_t) 0;
     }
 
-    i = 0;
-    for (; i < 2; ++i) {
-        fill_page_tbl(i, PHY_ADDR_START + i << (__PG_OFFSET__ + 10), 0x07); /* pg0 0K - 4K */
-    }
+    g_pgdir[0] = (uint32_t) pg0ptr | 0x03;
+    g_pgdir[KERNEL_DIR_SIDX] = (uint32_t) pg0ptr | 0x03;
 
-    enable_paging();
+    __asm__ __volatile__ ( 
+        "movl %0, %%eax\n\t" 
+        "movl %%eax, %%cr3\n\t" 
+        "movl %%cr0, %%eax\n\t" 
+        "orl  $0x80000000, %%eax\n\t" 
+        "movl %%eax, %%cr0\n\t" :: "m"(pgdirptr)
+    ); 
 }

@@ -13,142 +13,142 @@ Name             Origin             Length             Attributes
 
 Linker script and memory map
 
-                0x0000000000000000                KERNEL_OFFSET = 0x0
+                0x00000000c0000000                KERNEL_OFFSET = 0xc0000000
                 0x0000000000100000                KERNEL_PHYADDR = 0x100000
-                0x000000000010000c                KERNEL_VIRADDR = ((KERNEL_OFFSET + KERNEL_PHYADDR) + 0xc)
+                0x00000000c0100000                KERNEL_VIRADDR = (KERNEL_OFFSET + KERNEL_PHYADDR)
                 0x0000000000100000                . = KERNEL_PHYADDR
 
-.mbh.text       0x0000000000100000        0xc
+.mbh.text       0x0000000000100000       0x2a
  *(.mbh.text)
- .mbh.text      0x0000000000100000        0xc boot/i386/loader.o
-                0x000000000010000c                . = KERNEL_VIRADDR
+ .mbh.text      0x0000000000100000       0x2a boot/i386/loader.o
+                0x00000000c010002a                . = (. + KERNEL_OFFSET)
 
-.text           0x000000000010000c      0xa87
+.text           0x00000000c010002c      0xa27 load address 0x000000000010002c
  *(.text)
- .text          0x000000000010000c      0x149 lib/kstdlib.o
-                0x000000000010000c                in_byte
-                0x0000000000100029                out_byte
-                0x0000000000100047                itoa
-                0x0000000000100120                memset
- *fill*         0x0000000000100155        0x3 00
- .text          0x0000000000100158      0x1f5 lib/kstdio.o
-                0x0000000000100158                printk
-                0x000000000010024e                putchar
-                0x0000000000100302                cls
- *fill*         0x000000000010034d        0x3 00
- .text          0x0000000000100350       0x28 src/kernel.o
-                0x0000000000100350                kernel_main
- .text          0x0000000000100378       0xc9 src/protect.o
-                0x0000000000100378                setup_gdt
- *fill*         0x0000000000100441        0x3 00
- .text          0x0000000000100444      0x419 src/irpts.o
-                0x00000000001004b5                _do_divide0_error
-                0x00000000001004d7                _do_debug
-                0x00000000001004f9                _do_nmi
-                0x000000000010051b                _do_debug_break
-                0x000000000010053d                _do_overflow
-                0x000000000010055f                _do_bounds_check
-                0x0000000000100581                _do_invalid_op
-                0x00000000001005a3                _do_device_fail
-                0x00000000001005c5                _do_double_fault
-                0x00000000001005e7                _do_cop_segment
-                0x0000000000100609                _do_tss_inval
-                0x000000000010062b                _do_segment_unpresent
-                0x000000000010064d                _do_stack_segment
-                0x000000000010066f                _do_general_protection
-                0x0000000000100691                _do_page_fault
-                0x00000000001006b3                _do_reserved
-                0x00000000001006d5                _do_cop_error
-                0x0000000000100748                setup_idt
- *fill*         0x000000000010085d        0x3 00
- .text          0x0000000000100860       0xd4 arch/i386/page.o
-                0x0000000000100860                setup_paging
- *fill*         0x0000000000100934        0xc 00
- .text          0x0000000000100940       0x48 boot/i386/loader.o
-                0x0000000000100940                loader
-                0x000000000010095b                gdt_flush
- *fill*         0x0000000000100988        0x8 00
- .text          0x0000000000100990      0x103 arch/i386/irpts.o
-                0x0000000000100990                divide0_error
-                0x000000000010099f                debug
-                0x00000000001009ae                nmi
-                0x00000000001009bd                debug_break
-                0x00000000001009cc                overflow
-                0x00000000001009db                bounds_check
-                0x00000000001009ea                invalid_op
-                0x00000000001009f9                device_fail
-                0x0000000000100a03                double_fault
-                0x0000000000100a0d                cop_segment
-                0x0000000000100a17                tss_inval
-                0x0000000000100a21                segment_unpresent
-                0x0000000000100a2b                stack_segment
-                0x0000000000100a35                general_protection
-                0x0000000000100a3f                page_fault
-                0x0000000000100a49                reserved
-                0x0000000000100a58                cop_error
+ .text          0x00000000c010002c      0x149 lib/kstdlib.o
+                0x00000000c010002c                in_byte
+                0x00000000c0100049                out_byte
+                0x00000000c0100067                itoa
+                0x00000000c0100140                memset
+ *fill*         0x00000000c0100175        0x3 00
+ .text          0x00000000c0100178      0x1f5 lib/kstdio.o
+                0x00000000c0100178                printk
+                0x00000000c010026e                putchar
+                0x00000000c0100322                cls
+ *fill*         0x00000000c010036d        0x3 00
+ .text          0x00000000c0100370       0x23 src/kernel.o
+                0x00000000c0100370                kernel_main
+ *fill*         0x00000000c0100393        0x1 00
+ .text          0x00000000c0100394       0xb7 src/protect.o
+                0x00000000c0100394                setup_gdt
+ *fill*         0x00000000c010044b        0x1 00
+ .text          0x00000000c010044c      0x419 src/irpts.o
+                0x00000000c01004bd                _do_divide0_error
+                0x00000000c01004df                _do_debug
+                0x00000000c0100501                _do_nmi
+                0x00000000c0100523                _do_debug_break
+                0x00000000c0100545                _do_overflow
+                0x00000000c0100567                _do_bounds_check
+                0x00000000c0100589                _do_invalid_op
+                0x00000000c01005ab                _do_device_fail
+                0x00000000c01005cd                _do_double_fault
+                0x00000000c01005ef                _do_cop_segment
+                0x00000000c0100611                _do_tss_inval
+                0x00000000c0100633                _do_segment_unpresent
+                0x00000000c0100655                _do_stack_segment
+                0x00000000c0100677                _do_general_protection
+                0x00000000c0100699                _do_page_fault
+                0x00000000c01006bb                _do_reserved
+                0x00000000c01006dd                _do_cop_error
+                0x00000000c0100750                setup_idt
+ *fill*         0x00000000c0100865        0x3 00
+ .text          0x00000000c0100868       0x75 arch/i386/page.o
+                0x00000000c0100868                setup_paging
+ *fill*         0x00000000c01008dd        0x3 00
+ .text          0x00000000c01008e0       0x64 boot/i386/loader.o
+                0x00000000c01008e0                loader
+                0x00000000c0100917                gdt_flush
+ *fill*         0x00000000c0100944        0xc 00
+ .text          0x00000000c0100950      0x103 arch/i386/irpts.o
+                0x00000000c0100950                divide0_error
+                0x00000000c010095f                debug
+                0x00000000c010096e                nmi
+                0x00000000c010097d                debug_break
+                0x00000000c010098c                overflow
+                0x00000000c010099b                bounds_check
+                0x00000000c01009aa                invalid_op
+                0x00000000c01009b9                device_fail
+                0x00000000c01009c3                double_fault
+                0x00000000c01009cd                cop_segment
+                0x00000000c01009d7                tss_inval
+                0x00000000c01009e1                segment_unpresent
+                0x00000000c01009eb                stack_segment
+                0x00000000c01009f5                general_protection
+                0x00000000c01009ff                page_fault
+                0x00000000c0100a09                reserved
+                0x00000000c0100a18                cop_error
 
-.iplt           0x0000000000100a94        0x0
- .iplt          0x0000000000100a94        0x0 lib/kstdio.o
+.iplt           0x00000000c0100a54        0x0 load address 0x0000000000100a54
+ .iplt          0x00000000c0100a54        0x0 lib/kstdio.o
 
-.rodata         0x0000000000101000      0x1c7
+.rodata         0x00000000c0101000      0x1b4 load address 0x0000000000101000
  *(.rodata)
- .rodata        0x0000000000101000        0x7 lib/kstdio.o
- .rodata        0x0000000000101007        0xe src/kernel.o
- *fill*         0x0000000000101015        0x1 00
- .rodata        0x0000000000101016        0x6 src/protect.o
-                0x0000000000101016                gdt_offset
-                0x0000000000101018                kernel_code_selector
-                0x000000000010101a                kernel_data_selector
- .rodata        0x000000000010101c      0x198 src/irpts.o
- .rodata        0x00000000001011b4       0x13 arch/i386/page.o
+ .rodata        0x00000000c0101000        0x7 lib/kstdio.o
+ .rodata        0x00000000c0101007        0xe src/kernel.o
+ *fill*         0x00000000c0101015        0x1 00
+ .rodata        0x00000000c0101016        0x6 src/protect.o
+                0x00000000c0101016                gdt_offset
+                0x00000000c0101018                kernel_code_selector
+                0x00000000c010101a                kernel_data_selector
+ .rodata        0x00000000c010101c      0x198 src/irpts.o
 
-.rel.dyn        0x00000000001011c8        0x0
- .rel.iplt      0x00000000001011c8        0x0 lib/kstdio.o
+.rel.dyn        0x00000000c01011b4        0x0 load address 0x00000000001011b4
+ .rel.iplt      0x00000000c01011b4        0x0 lib/kstdio.o
  .rel.text      0x0000000000000000        0x0 src/kernel.o
 
-.data           0x0000000000102000        0x8
+.data           0x00000000c0102000        0x8 load address 0x0000000000102000
  *(.data)
- .data          0x0000000000102000        0x0 lib/kstdlib.o
- .data          0x0000000000102000        0x0 lib/kstdio.o
- .data          0x0000000000102000        0x0 src/kernel.o
- .data          0x0000000000102000        0x6 src/protect.o
-                0x0000000000102000                gdtptr
- *fill*         0x0000000000102006        0x2 00
- .data          0x0000000000102008        0x0 src/irpts.o
- .data          0x0000000000102008        0x0 arch/i386/page.o
+ .data          0x00000000c0102000        0x0 lib/kstdlib.o
+ .data          0x00000000c0102000        0x0 lib/kstdio.o
+ .data          0x00000000c0102000        0x0 src/kernel.o
+ .data          0x00000000c0102000        0x6 src/protect.o
+                0x00000000c0102000                gdtptr
+ *fill*         0x00000000c0102006        0x2 00
+ .data          0x00000000c0102008        0x0 src/irpts.o
+ .data          0x00000000c0102008        0x0 arch/i386/page.o
 
-.igot.plt       0x0000000000102008        0x0
- .igot.plt      0x0000000000102008        0x0 lib/kstdio.o
+.igot.plt       0x00000000c0102008        0x0 load address 0x0000000000102008
+ .igot.plt      0x00000000c0102008        0x0 lib/kstdio.o
 
-.bss            0x0000000000102020     0x4c20
-                0x0000000000102020                sbss = .
+.bss            0x00000000c0102020     0x4c20 load address 0x0000000000102020
+                0x00000000c0102020                sbss = .
  *(COMMON)
- COMMON         0x0000000000102020      0x400 src/protect.o
-                0x0000000000102020                gdts
- COMMON         0x0000000000102420      0x806 src/irpts.o
-                0x0000000000102420                idts
-                0x0000000000102c20                idtptr
+ COMMON         0x00000000c0102020      0x400 src/protect.o
+                0x00000000c0102020                gdts
+ COMMON         0x00000000c0102420      0x806 src/irpts.o
+                0x00000000c0102420                idts
+                0x00000000c0102c20                idtptr
  *(.bss)
- *fill*         0x0000000000102c26        0x2 00
- .bss           0x0000000000102c28        0x0 lib/kstdlib.o
- .bss           0x0000000000102c28        0xc lib/kstdio.o
- .bss           0x0000000000102c34        0xc src/kernel.o
- .bss           0x0000000000102c40        0x0 src/protect.o
- .bss           0x0000000000102c40        0x0 src/irpts.o
- .bss           0x0000000000102c40        0x0 arch/i386/page.o
- .bss           0x0000000000102c40     0x4000 boot/i386/loader.o
-                0x0000000000106c40                ebss = .
+ *fill*         0x00000000c0102c26        0x2 00
+ .bss           0x00000000c0102c28        0x0 lib/kstdlib.o
+ .bss           0x00000000c0102c28        0xc lib/kstdio.o
+ .bss           0x00000000c0102c34        0xc src/kernel.o
+ .bss           0x00000000c0102c40        0x0 src/protect.o
+ .bss           0x00000000c0102c40        0x0 src/irpts.o
+ .bss           0x00000000c0102c40        0x0 arch/i386/page.o
+ .bss           0x00000000c0102c40     0x4000 boot/i386/loader.o
+                0x00000000c0106c40                ebss = .
 
-.pgdir.data     0x0000000000107000     0x1000
+.pgdir.data     0x00000000c0107000     0x1000 load address 0x0000000000107000
  *(.pgdir.data)
- .pgdir.data    0x0000000000107000     0x1000 arch/i386/page.o
-                0x0000000000107000                g_pgdir
+ .pgdir.data    0x00000000c0107000     0x1000 arch/i386/page.o
+                0x00000000c0107000                g_pgdir
 
-.pgtbl.data     0x0000000000108000     0x2000
+.pgtbl.data     0x00000000c0108000     0x1000 load address 0x0000000000108000
  *(.pgtbl.data)
- .pgtbl.data    0x0000000000108000     0x2000 arch/i386/page.o
-                0x0000000000108000                g_pgtbl
-                0x000000000010a000                _end = .
+ .pgtbl.data    0x00000000c0108000     0x1000 arch/i386/page.o
+                0x00000000c0108000                g_pg0
+                0x00000000c0109000                _end = .
 LOAD lib/kstdlib.o
 LOAD lib/kstdio.o
 LOAD src/kernel.o
@@ -233,8 +233,8 @@ device_fail                                       arch/i386/irpts.o
 divide0_error                                     arch/i386/irpts.o
                                                   src/irpts.o
 double_fault                                      arch/i386/irpts.o
+g_pg0                                             arch/i386/page.o
 g_pgdir                                           arch/i386/page.o
-g_pgtbl                                           arch/i386/page.o
 gdt_flush                                         boot/i386/loader.o
                                                   src/protect.o
 gdt_offset                                        src/protect.o
@@ -267,7 +267,6 @@ out_byte                                          lib/kstdlib.o
 overflow                                          arch/i386/irpts.o
 page_fault                                        arch/i386/irpts.o
 printk                                            lib/kstdio.o
-                                                  arch/i386/page.o
                                                   src/irpts.o
                                                   src/kernel.o
 putchar                                           lib/kstdio.o
@@ -276,7 +275,6 @@ segment_unpresent                                 arch/i386/irpts.o
 setup_gdt                                         src/protect.o
                                                   src/kernel.o
 setup_idt                                         src/irpts.o
-                                                  src/kernel.o
 setup_paging                                      arch/i386/page.o
                                                   src/kernel.o
 stack_segment                                     arch/i386/irpts.o

@@ -1,6 +1,6 @@
 ARCH=i386
 
-VMODE=-DKERNEL_OFFSET=0x00000000
+VMODE=-DKERNEL_OFFSET=0xC0000000
 
 CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin
 
@@ -19,7 +19,7 @@ $(cobj): %.o: %.c
 kernel.bin: $(objects)
 	ld -T linker.ld --cref -Map kernel.map -o $@ $^
 
-install: kernel.bin
+install: clean kernel.bin
 	sudo losetup	-o 32256 /dev/loop0 disk.img
 	sudo mkfs.ext2 /dev/loop0
 	sudo mount -o loop /dev/loop0 /mnt
