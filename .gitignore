@@ -4,5 +4,5 @@
 opt
 disk.img
 *.swp
-tools/bochs*
 kernel.map
+tools/bochs-2.4.5
