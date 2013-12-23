@@ -1,2 +1,13 @@
 1. 简介/Introduction
     一个基于i386，分页的玩具操作系统
+
+2. 准备工作
+    a. Linux 2.6+ 最好是Fedora 13 或者 Ubuntu 10+ 系统。已经安装gcc和binutils工具集
+    b. 安装基准工具集合 cd ~/you_workspace/tools/ && make && make install
+    
+3. 编译和安装内核
+    make && make install
+    该命令会编译内核，并且将kernel.bin 安装到虚拟硬盘文件 disk.img
+
+4. 虚拟机运行
+    bochs -f bochsrc
