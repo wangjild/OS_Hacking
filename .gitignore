@@ -5,3 +5,4 @@ opt
 disk.img
 *.swp
 tools/bochs*
+kernel.map

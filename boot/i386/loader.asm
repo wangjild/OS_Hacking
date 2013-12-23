@@ -1,4 +1,4 @@
-%include "boot/i386/gdt.asm"
+;%include "boot/i386/gdt.asm"
 
 global	loader
 extern	kernel_main
