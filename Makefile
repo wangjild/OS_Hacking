@@ -24,13 +24,13 @@ install: clean kernel.bin
 	sudo mkfs.ext2 /dev/loop0
 	sudo mount -o loop /dev/loop0 /mnt
 	sudo mkdir -p /mnt/boot/grub
-	sudo cp /boot/grub/stage1 /boot/grub/e2fs_stage1_5 /boot/grub/stage2 /mnt/boot/grub/
+	sudo cp boot/grub/stage1 boot/grub/e2fs_stage1_5 boot/grub/stage2 /mnt/boot/grub/
 	sudo cp boot/grub/grub.conf /mnt/boot/grub
 	sudo cp boot/grub/grub.conf /mnt/boot/grub/menu.lst
 	sudo cp kernel.bin /mnt/
 	sudo umount /mnt
 	sudo losetup -d /dev/loop0
-	sudo cat boot/grub/device-map | grub --device-map=/dev/null
+	sudo cat boot/grub/device-map | ./opt/sbin/grub --device-map=/dev/null
 
 clean:
 	rm -rf $(objects)
