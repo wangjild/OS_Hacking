@@ -30,7 +30,7 @@ install: clean kernel.bin
 	sudo cp kernel.bin /mnt/
 	sudo umount /mnt
 	sudo losetup -d /dev/loop0
-	sudo cat boot/grub/device-map | ./opt/sbin/grub --device-map=/dev/null
+	sudo cat boot/grub/device-map | ./binutils/sbin/grub --device-map=/dev/null
 
 clean:
 	rm -rf $(objects)
