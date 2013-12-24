@@ -3,7 +3,13 @@
 
 2. 准备工作
     a. Linux 2.6+ 最好是Fedora 13 或者 Ubuntu 10+ 系统。已经安装gcc和binutils工具集
-    b. 安装基准工具集合 cd ~/you_workspace/tools/ && make && make install
+    b. 安装gcc和binutils
+        Fedora: sudo yum install gcc binutils -y
+        Ubuntu: sudo apt-get install build-essential
+    c. 安装grub
+        Fedora: sudo yum install grub -y
+        Ubuntu: sudo apt-get install grub
+    d. 安装基准工具bochs cd ~/you_workspace/tools/ && make && make install
     
 3. 编译和安装内核
     make && make install
