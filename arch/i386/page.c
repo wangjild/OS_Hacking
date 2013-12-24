@@ -27,17 +27,22 @@
 #include <sys/type.h>
 #include <arch/i386/page.h>
 
+/* 全局页目录 */
 pgdir_t g_pgdir __pgdir;
+/* 全局页表 */
 pgtbl_t g_pgtbl[1] __pgtbl;
 
+/* 设置页目录宏 */ 
 #define set_page_dir(i, pg_tbl_addr, attr) { \
     g_pgdir.item[i] = (pg_t) ((uint32_t) pg_tbl_addr & 0xFFFFF000) | (attr & 0x00000FFF); \
 }
 
+/* 设置页表项宏 */
 #define set_page_tbl(i, j, phy_addr, attr) { \
     g_pgtbl[i].item[j] = (pg_t) ((uint32_t) phy_addr & 0xFFFFF000) | (attr & 0x00000FFF); \
 }
 
+/* 设置整个页表的宏 */
 #define fill_page_tbl(idx, phy_addr_start, attr) { \
     int tbli = 0; int start = (phy_addr_start & 0xFFFFF000); \
     while (tbli < PG_TBL_SIZE) { \
@@ -46,6 +51,7 @@ pgtbl_t g_pgtbl[1] __pgtbl;
     } \
 }
 
+/* 开启分页，参数必须是页目录的物理地址 */
 #define enable_paging(pgdir_base) { \
     __asm__ __volatile__ ( \
         "movl %0, %%eax\n\t" \
@@ -56,6 +62,7 @@ pgtbl_t g_pgtbl[1] __pgtbl;
     ); \
 }
 
+/* 启动分页 */
 void setup_paging(void) {
     memset(&g_pgdir, 0, sizeof(pgdir_t));
     
