@@ -22,13 +22,14 @@
 */
      
 #include <multiboot.h>
-#include <kstdio.h>
-#include <kstdlib.h>
+#include <lib/kstdio.h>
+#include <lib/kstdlib.h>
 
 #include <sys/i8259.h>
 //#include <sys/mm.h>
 #include <sys/irpts.h>
 #include <arch/i386/page.h>
+#include <arch/i386/8259a.h>
 
 /* Macros. */
      
@@ -146,7 +147,11 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_paging();
     setup_gdt();
     cls();
-    printk("Hello CatOS!\n");
+    printk("Setup IRQ...    ");
+    setup_irq();
+    printk("Done\n");
     setup_idt();
-    int a = 10 / 0;
+    printk("Hello CatOS!\n");
+
+    __asm__ __volatile__ ("int $0x20" :: );
 }

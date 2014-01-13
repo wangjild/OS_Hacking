@@ -2,7 +2,7 @@
     一个基于i386，分页的玩具操作系统
 
 2. 准备工作
-    a. Linux 2.6+ 最好是Fedora 13 或者 Ubuntu 10+ 系统。已经安装gcc和binutils工具集
+    a. Linux 2.6+ 最好是Fedora 13 或者 Ubuntu 10+ 系统
     b. 安装gcc和binutils
         Fedora: sudo yum install gcc binutils -y
         Ubuntu: sudo apt-get install build-essential

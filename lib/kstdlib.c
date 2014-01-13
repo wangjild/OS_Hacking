@@ -24,7 +24,8 @@
  *   Descripton:    kernel general library
  */
 
-#include <kstdlib.h>
+#include <lib/kstdlib.h>
+
 uint8_t in_byte(uint16_t port) {
     uint8_t ret;
     __asm__ __volatile__ ("inb %1, %0" : "=a"(ret) : "dN" (port));

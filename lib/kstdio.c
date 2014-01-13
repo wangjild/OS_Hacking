@@ -24,8 +24,8 @@
  *   Descripton:    
  */
 
-#include <kstdio.h>
-#include <kstdlib.h>
+#include <lib/kstdio.h>
+#include <lib/kstdlib.h>
 
 /* Format a string and print it on the screen, just like the libc
    function printf. */
