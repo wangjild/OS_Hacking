@@ -61,7 +61,7 @@ static void setIRQ(int isqvec) {
     );
 
     __asm__ __volatile__ (
-        "movb   $0xFE,  %%al\n\t"
+        "movb   $0xFF,  %%al\n\t"
         "outb   %%al,   $0x21\n\t"
         "nop\n\tnop\n\tnop\n\t" 
         

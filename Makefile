@@ -6,7 +6,7 @@ CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin
 
 GRUBLIB=/boot/grub
 
-cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o arch/$(ARCH)/8259a.o
+cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o arch/$(ARCH)/8259a.o arch/$(ARCH)/timer.o
 asmobj = boot/$(ARCH)/loader.o arch/$(ARCH)/irpts.o
 objects = $(cobj) $(asmobj)
 

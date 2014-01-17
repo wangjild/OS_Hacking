@@ -114,7 +114,7 @@ struct idt_ptr   idtptr;
     ); \
 }
 
-static void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
+void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
     idts[idx].offset_low = base & 0x0FFFF;
     idts[idx].offset_high = (base >> 16) &0x0FFFF;
     idts[idx].selector = selector;
@@ -153,7 +153,6 @@ void setup_idt() {
     set_idt(2, (uint32_t) &nmi, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
     set_idt(3, (uint32_t) &debug_break, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
     set_idt(13, (uint32_t) &general_protection, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
-    set_idt(0x20, (uint32_t) &reserved, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
     set_idt(0x80, (uint32_t) &reserved, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
     
     idt_load();

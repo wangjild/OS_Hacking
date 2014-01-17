@@ -151,7 +151,7 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_irq();
     printk("Done\n");
     setup_idt();
-    printk("Hello CatOS!\n");
+    setup_timer();
 
-    __asm__ __volatile__ ("int $0x20" :: );
+    printk("Hello CatOS!\n");
 }

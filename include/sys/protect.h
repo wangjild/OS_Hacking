@@ -193,4 +193,8 @@ struct idt_ptr {
 #define IDT_DPL3    0xE0
 #define IDT_IRPT    0x0E
 #define IDT_TRAP    0x0F
+
+extern const uint16_t kernel_code_selector;
+extern const uint16_t kernel_data_selector;
+
 #endif
