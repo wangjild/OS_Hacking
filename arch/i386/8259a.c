@@ -23,55 +23,47 @@
  *   Date:          14-01-13 18:29:47
  *   Descripton:    Intel 8259
  */
+#include <lib/kstdlib.h>
+#include <arch/i386/8259a.h>
+#include <arch/i386/io.h>
 
-static void setIRQ(int isqvec) {
-    int slave_isqvec = isqvec + 8;
-    __asm__ __volatile__(
-        "movb   $0x11,  %%al\n\t" // edge driggered | 8字节中断向量 | 级联 | 需要ICW4
-        "outb   %%al,   $0x20\n\t" // 主ICW1
-        "nop\n\tnop\n\tnop\n\t"
-        
-        "outb   %%al,   $0xA0\n\t" // 从ICW1
-        "nop\n\tnop\n\tnop\n\t"
-        
-        "movb   %0,     %%al\n\t" // 主ICW2 设置IRQ0-7对应的中断向量号
-        "outb   %%al,   $0x21\n\t"
-        "nop\n\tnop\n\tnop\n\t"
-       
-        "movb   %1,     %%al\n\t" // 从ICW2 设置IRQ8-15对应的中断向量号
-        "outb   %%al,   $0xA1\n\t" 
-        "nop\n\tnop\n\tnop\n\t"
-
-        "movb   $0x04,  %%al\n\t" // IRQ2 对应从8259
-        "outb   %%al,   $0x21\n\t"
-        "nop\n\tnop\n\tnop\n\t"
-
-
-        "movb   $0x02,  %%al\n\t" // 从8259 对应主IRQ2
-        "outb   %%al,   $0xA1\n\t"
-        "nop\n\tnop\n\tnop\n\t"
-
-        "movb   $0x01,  %%al\n\t" // 主ICW4 x86模式 
-        "outb   %%al,   $0x21\n\t"
-        "nop\n\tnop\n\tnop\n\t"
-
-        "outb   %%al,   $0xA1\n\t" // 从ICW4
-        "nop\n\tnop\n\tnop\n\t" 
-        :: "m" (isqvec), "m"(slave_isqvec)
-    );
-
-    __asm__ __volatile__ (
-        "movb   $0xFF,  %%al\n\t"
-        "outb   %%al,   $0x21\n\t"
-        "nop\n\tnop\n\tnop\n\t" 
-        
-        "movb   $0xFF,  %%al\n\t"
-        "outb   %%al,   $0xA1\n\t"
-        "nop\n\tnop\n\tnop\n\t" :: 
-    );
+void set_mask() {
 
 }
 
+static void setIRQ() {
+
+  uint8_t mask1, mask2;
+  mask1 = in_byte(PIC1_DATA);
+  mask2 = in_byte(PIC2_DATA);
+  
+  /* ICW1 */
+  out_byte(PIC1_CMD, 0x11); // edge driggered | 8字节中断向量 | 级联 | 需要PIC2
+  out_byte(PIC2_CMD, 0x11); 
+  io_delay();
+
+  /* ICW2 */
+  out_byte(PIC1_DATA, 0x20); // 主PIC2 设置IRQ0-7对应的中断向量号
+  out_byte(PIC2_DATA, 0x28);  // 从PIC2 设置IRQ8-15对应的中断向量号
+  io_delay();
+
+  /* ICW3 */
+  out_byte(PIC1_DATA, 0x04); // IRQ2 对应从8259
+  out_byte(PIC2_DATA, 0x02);  // 从8259 对应主IRQ2
+  io_delay();
+
+  /* ICW4 */
+  out_byte(PIC1_DATA, 0x01); // 主PIC2 x86模式
+  out_byte(PIC2_DATA, 0x01);  // 从PIC2
+  io_delay();
+
+  /* OCW1 */
+  /*所有中断现在全部屏蔽*/
+  out_byte(PIC1_DATA, 0xFF);
+  out_byte(PIC2_DATA, 0xFF);
+  io_delay();
+}
+
 void setup_irq() {
-    setIRQ(0x20); 
+  setIRQ(); 
 }

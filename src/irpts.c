@@ -103,6 +103,11 @@ void _do_cop_error(uint32_t errcode, struct irpt_regs* regs) {
     FATAL("int16: coprocesser error", errcode, regs);
 }
 
+void _do_timer(uint32_t errcode, struct irpt_regs* regs) {
+  FATAL("int 20: timer interrupt", errcode, regs);
+
+}
+
 
 #define IDT_OFFSET 256
 struct idt_entry idts[IDT_OFFSET];

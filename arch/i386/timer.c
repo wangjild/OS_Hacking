@@ -2,6 +2,9 @@
 #include <arch/i386/timer.h>
 #include <sys/irpts.h>
 #include <sys/protect.h>
+#include <arch/i386/8259a.h>
+#include <arch/i386/io.h>
+#include <lib/kstdio.h>
 
 extern void reserved();
 
@@ -18,6 +21,8 @@ void setup_timer() {
   
   // 0x20 对应 IRQ0
   set_idt(0x20, (uint32_t) &reserved, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
-  out_byte(0x21, in_byte(0x21) & ~0x01);
+  out_byte(PIC1_DATA, 0);
+  out_byte(PIC2_DATA, 0);
+  io_delay();
 
 }

@@ -27,6 +27,19 @@
 #ifndef _8259A_H_
 #define _8259A_H_
 
+#define PIC1_CMD  0x20
+#define PIC1_DATA  (PIC1_CMD + 1)
+
+#define PIC2_CMD  0xA0
+#define PIC2_DATA  (PIC2_CMD + 1)
+
 void setup_irq();
 
+#define PIC_EOI 0x20
+
+void PIC_sendEOI(uint8_t irq) {
+  if (irq >= 8)
+    out_byte(PIC2_CMD, PIC_EOI);
+  out_byte(PIC1_CMD, PIC_EOI);
+}
 #endif
