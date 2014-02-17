@@ -49,7 +49,7 @@ higherhalt:
     push eax                      ; pass Multiboot magic number
     push ebx                      ; pass Multiboot info structure
     call kernel_main              ; call kernel proper
-    cli
+
 hang:
    hlt                            ; halt machine should kernel return
    jmp  hang

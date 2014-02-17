@@ -36,7 +36,7 @@ static void setIRQ() {
   uint8_t mask1, mask2;
   mask1 = in_byte(PIC1_DATA);
   mask2 = in_byte(PIC2_DATA);
-  
+
   /* ICW1 */
   out_byte(PIC1_CMD, 0x11); // edge driggered | 8字节中断向量 | 级联 | 需要PIC2
   out_byte(PIC2_CMD, 0x11); 
@@ -66,4 +66,10 @@ static void setIRQ() {
 
 void setup_irq() {
   setIRQ(); 
+}
+
+void PIC_sendEOI(uint8_t irq) {
+  if (irq >= 8)
+    out_byte(PIC2_CMD, PIC_EOI);
+  out_byte(PIC1_CMD, PIC_EOI);
 }

@@ -37,9 +37,6 @@ void setup_irq();
 
 #define PIC_EOI 0x20
 
-void PIC_sendEOI(uint8_t irq) {
-  if (irq >= 8)
-    out_byte(PIC2_CMD, PIC_EOI);
-  out_byte(PIC1_CMD, PIC_EOI);
-}
+void PIC_sendEOI(uint8_t irq);
+
 #endif

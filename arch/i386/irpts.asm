@@ -150,6 +150,13 @@ cop_error:
     push    _do_cop_error
     jmp     exception_handler
 
+; int 32 定时器
+global do_timer
+extern _do_timer
+do_timer:
+  push  _do_timer
+  jmp   exception_handler
+
 extern kernel_data_selector
 exception_handler:
     xchg    [esp+4],  eax       ; exchange errcode <-> eax
