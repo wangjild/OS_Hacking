@@ -23,9 +23,9 @@
  *   Date:          14-01-13 18:29:47
  *   Descripton:    Intel 8259
  */
-#include <lib/kstdlib.h>
-#include <arch/i386/8259a.h>
-#include <arch/i386/io.h>
+#include "lib/kstdlib.h"
+#include "arch/i386/8259a.h"
+#include "arch/i386/io.h"
 
 void set_mask() {
 

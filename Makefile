@@ -2,11 +2,11 @@ ARCH=i386
 
 VMODE=-DKERNEL_OFFSET=0xC0000000
 
-CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin
+CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -fno-stack-protector -m32
 
 GRUBLIB=/boot/grub
 
-cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o arch/$(ARCH)/8259a.o arch/$(ARCH)/timer.o
+cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o arch/$(ARCH)/8259a.o arch/$(ARCH)/timer.o arch/$(ARCH)/io.o
 asmobj = boot/$(ARCH)/loader.o arch/$(ARCH)/irpts.o
 objects = $(cobj) $(asmobj)
 
@@ -19,7 +19,7 @@ $(cobj): %.o: %.c
 	gcc -c $(VMODE) $(CFLAGS) $< -o $@
 
 kernel.bin: $(objects)
-	ld -T linker.ld --cref -Map kernel.map -o $@ $^
+	ld -T linker.ld -melf_i386 --cref -Map kernel.map -o $@ $^
 
 install: clean kernel.bin
 	sudo losetup	-o 32256 /dev/loop0 disk.img

@@ -23,11 +23,11 @@
  *   Date:          13-12-14 22:58:40
  *   Descripton:    interupts 0 - 32 handlers and installers
  */
-#include <sys/type.h>
-#include <sys/protect.h>
-#include <sys/irpts.h>
+#include "sys/type.h"
+#include "sys/protect.h"
+#include "sys/irpts.h"
 
-#include <arch/i386/8259a.h>
+#include "arch/i386/8259a.h"
 
 static void FATAL(const char* str, uint32_t errcode, struct irpt_regs* regs) {
   printk("[FATAL] %s\n", str);

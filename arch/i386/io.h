@@ -18,38 +18,16 @@
 /*
  *   Author:        wangjild <wangjild@gmail.com>
  *   Github:        https://github.com/wangjild/OS_Hacking
- *   File:          sys/page.h
+ *   File:          arch/i386/page.h
  *   Lauguage:      c/cpp
- *   Date:          13-12-02 21:56:23
- *   Descripton:    page structure 
+ *   Date:          15-07-12 21:56:23
+ *   Descripton:    io 
  */
 
 
-#ifndef _SYS_PAGE_H_
-#define _SYS_PAGE_H_
+#ifndef _IO_H_
+#define _IO_H_
 
-#include "sys/type.h"
-
-typedef uint32_t pg_t;
-
-#define PG_DIR_SIZE (1 << 10)
-#define PG_TBL_SIZE PG_DIR_SIZE
-
-#define __PG_OFFSET__   12
-
-typedef struct pgdir {
-    pg_t item[PG_DIR_SIZE];
-}pgdir_t;
-
-typedef pgdir_t pgtbl_t;
-extern pgdir_t  g_pgdir __pgdir;
-extern pgtbl_t  g_pgtbl[1] __pgtbl; // max 4G
-
-#define logic2phys(viraddr) ((void*) viraddr) + 0x0 - KERNEL_OFFSET
-
-#define KERNEL_DIR_SIDX   (KERNEL_OFFSET >> 22)
-#define KERNEL_DIR_EIDX   PG_DIR_SIZE
-
-void setup_page (void) ;
+void io_delay (void) ;
 
 #endif

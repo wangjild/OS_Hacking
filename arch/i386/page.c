@@ -24,8 +24,8 @@
  *   Descripton:    paging functions
  */
 
-#include <sys/type.h>
-#include <arch/i386/page.h>
+#include "sys/type.h"
+#include "arch/i386/page.h"
 
 /* 全局页目录 */
 pgdir_t g_pgdir __pgdir;

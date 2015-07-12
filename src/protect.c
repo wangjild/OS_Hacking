@@ -24,8 +24,8 @@
  *   Descripton:    Protect Model Operations
  */
 
-#include <sys/protect.h>
-#include <arch/i386/page.h>
+#include "sys/protect.h"
+#include "arch/i386/page.h"
 
 #define GDT_OFFSET 128
 #define SEG_KERNEL_C    SEG_KCODE_FLAT

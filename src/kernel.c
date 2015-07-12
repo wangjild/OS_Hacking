@@ -21,15 +21,15 @@
  * @author Wang Jing (wangjild@gmail.com)
 */
      
-#include <multiboot.h>
-#include <lib/kstdio.h>
-#include <lib/kstdlib.h>
+#include "multiboot.h"
+#include "lib/kstdio.h"
+#include "lib/kstdlib.h"
 
-#include <sys/i8259.h>
+#include "sys/i8259.h"
 //#include <sys/mm.h>
-#include <sys/irpts.h>
-#include <arch/i386/page.h>
-#include <arch/i386/8259a.h>
+#include "sys/irpts.h"
+#include "arch/i386/page.h"
+#include "arch/i386/8259a.h"
 
 /* Macros. */
      
@@ -154,10 +154,13 @@ kernel_main (unsigned long addr, unsigned long magic)
     printk("Setup IRQ...    ");
     setup_irq();
     printk("Done\n");
-    
+
+    while(1) {}
     printk("Setup TIMER...    ");
     setup_timer();
     printk("Done\n");
 
     printk("Hello CatOS!\n");
+    while (1) {
+    }
 }
