@@ -6,8 +6,8 @@ CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -fno-stack-protector -m3
 
 GRUBLIB=/boot/grub
 
-cobj = lib/kstdlib.o lib/kstdio.o src/kernel.o src/protect.o src/irpts.o arch/$(ARCH)/page.o arch/$(ARCH)/8259a.o arch/$(ARCH)/timer.o arch/$(ARCH)/io.o
-asmobj = boot/$(ARCH)/loader.o arch/$(ARCH)/irpts.o
+cobj = lib/kstdlib.o lib/kstdio.o kernel.o protect.o isr.o arch/$(ARCH)/page.o sys/pit.o arch/$(ARCH)/timer.o arch/$(ARCH)/io.o
+asmobj = boot/$(ARCH)/loader.o interrupt.o
 objects = $(cobj) $(asmobj)
 
 all: kernel.bin

@@ -34,4 +34,24 @@ void _do_reserved(uint32_t errcode, struct irpt_regs* regs);
 void _do_cop_error(uint32_t errcode, struct irpt_regs* regs);
 
 void setup_irqts();
+
+void divide0_error();
+void debug();
+void nmi();
+void debug_break();
+void overflow();
+void bounds_check();
+void invalid_op();
+void device_fail();
+void double_fault();
+void cop_segment();
+void tss_inval();
+void segment_unpresent();
+void stack_segment();
+void general_protection();
+void page_fault();
+void reserved();
+void cop_error();
+void exception_handler();
+
 #endif

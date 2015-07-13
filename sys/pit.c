@@ -39,29 +39,37 @@ static void setIRQ() {
 
   /* ICW1 */
   out_byte(PIC1_CMD, 0x11); // edge driggered | 8字节中断向量 | 级联 | 需要PIC2
+  io_delay();
   out_byte(PIC2_CMD, 0x11); 
   io_delay();
 
   /* ICW2 */
   out_byte(PIC1_DATA, 0x20); // 主PIC2 设置IRQ0-7对应的中断向量号
+  io_delay();
   out_byte(PIC2_DATA, 0x28);  // 从PIC2 设置IRQ8-15对应的中断向量号
   io_delay();
 
   /* ICW3 */
   out_byte(PIC1_DATA, 0x04); // IRQ2 对应从8259
+  io_delay();
   out_byte(PIC2_DATA, 0x02);  // 从8259 对应主IRQ2
   io_delay();
 
   /* ICW4 */
   out_byte(PIC1_DATA, 0x01); // 主PIC2 x86模式
+  io_delay();
   out_byte(PIC2_DATA, 0x01);  // 从PIC2
   io_delay();
 
   /* OCW1 */
   /*所有中断现在全部屏蔽*/
   out_byte(PIC1_DATA, 0xFF);
+  io_delay();
   out_byte(PIC2_DATA, 0xFF);
   io_delay();
+
+  out_byte(PIC1_DATA, mask1);
+  out_byte(PIC1_DATA, mask2);
 }
 
 void setup_irq() {

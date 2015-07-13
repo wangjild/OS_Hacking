@@ -27,7 +27,7 @@
 
 #include "sys/i8259.h"
 //#include <sys/mm.h>
-#include "sys/irpts.h"
+#include <sys/isr.h>
 #include "arch/i386/page.h"
 #include "arch/i386/8259a.h"
 #include "arch/i386/timer.h"
@@ -161,6 +161,7 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_timer();
     printk("Done\n");
 
+    int i = 5 / 0;
     printk("Hello CatOS!\n");
 
     while (1) {

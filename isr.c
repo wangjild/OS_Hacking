@@ -25,7 +25,7 @@
  */
 #include "sys/type.h"
 #include "sys/protect.h"
-#include "sys/irpts.h"
+#include "sys/isr.h"
 
 #include "arch/i386/8259a.h"
 
@@ -111,25 +111,6 @@ void _do_timer(uint32_t errcode, struct irpt_regs* regs) {
 }
 
 
-#define IDT_OFFSET 256
-struct idt_entry idts[IDT_OFFSET];
-struct idt_ptr   idtptr;
-
-#define idt_load() { \
-  __asm__ __volatile__ ( \
-      "lidt %0" :: "m"(idtptr) \
-      ); \
-}
-
-void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
-  idts[idx].offset_low = base & 0x0FFFF;
-  idts[idx].offset_high = (base >> 16) &0x0FFFF;
-  idts[idx].selector = selector;
-  idts[idx].flags = flags;
-}
-
-extern const uint16_t kernel_code_selector;
-
 extern void divide0_error();
 extern void debug();
 extern void nmi();
@@ -150,22 +131,3 @@ extern void cop_error();
 extern void exception_handler();
 
 extern void do_timer();
-
-void setup_idt() {
-  memset(&idts, 0, sizeof(idts));
-
-  idtptr.base = (uint32_t) &idts;
-  idtptr.limit = sizeof(idts) - 1;
-
-  set_idt(0, (uint32_t) &divide0_error, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-  set_idt(1, (uint32_t) &debug, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-  set_idt(2, (uint32_t) &nmi, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-  set_idt(3, (uint32_t) &debug_break, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-  set_idt(13, (uint32_t) &general_protection, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
-  
-  //设置定时器
-  set_idt(0x20, (uint32_t) &_do_timer, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
-  set_idt(0x80, (uint32_t) &reserved, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
-
-  idt_load();
-}
