@@ -28,6 +28,12 @@
 #ifndef _IO_H_
 #define _IO_H_
 
-void io_delay (void) ;
+#include "sys/type.h"
+
+void io_delay(void);
+
+uint8_t in_byte(uint16_t port);
+
+void out_byte(uint16_t port, uint8_t val);
 
 #endif

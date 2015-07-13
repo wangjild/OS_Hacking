@@ -147,6 +147,7 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_paging();
     setup_gdt();
     cls();
+
     printk("Setup IDT...    ");
     setup_idt();
     printk("Done\n");
@@ -155,7 +156,6 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_irq();
     printk("Done\n");
 
-    while(1) {}
     printk("Setup TIMER...    ");
     setup_timer();
     printk("Done\n");

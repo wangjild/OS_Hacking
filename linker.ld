@@ -9,6 +9,8 @@ SECTIONS{
     .mbh.text ALIGN(0x4): {
         *(.mbh.text)
     }
+    
+    /* Higher Half Bare Bones */
     . += KERNEL_OFFSET;
     .text   ALIGN(0x4) : AT(ADDR(.text) - KERNEL_OFFSET) {
 		*(.text)
@@ -26,9 +28,12 @@ SECTIONS{
 		ebss = . ;
 	}
 
+    /* Page Dir */
     .pgdir.data   ALIGN   (0x01000) : AT(ADDR(.pgdir.data) - KERNEL_OFFSET) {
         *(.pgdir.data)
     }
+
+    /* Page Table */
     .pgtbl.data   ALIGN   (0x01000) : AT(ADDR(.pgtbl.data) - KERNEL_OFFSET) {
         *(.pgtbl.data)
     }
