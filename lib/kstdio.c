@@ -24,8 +24,19 @@
  *   Descripton:    
  */
 
+#include <sys/screen.h>
 #include <lib/kstdio.h>
 #include <lib/kstdlib.h>
+
+#include <arch/i386/io.h>
+
+/* Variables. */
+/* Save the X position. */
+static int xpos = 0;
+/* Save the Y position. */
+static int ypos = 0;
+/* Point to the video memory. */
+static volatile uint16_t *video = (uint16_t*) VIDEO;
 
 /* Format a string and print it on the screen, just like the libc
    function printf. */
@@ -74,27 +85,74 @@ string:
     }
 }
 
+static void 
+cursor(void) {
+    uint16_t loc = ypos * COLUMNS + xpos;
+    out_byte(0x3D4, 14);
+    out_byte(0x3D5, loc >> 8);
+    out_byte(0x3D4, 15);
+    out_byte(0x3D5, loc);
+}
+
+
+/* Scrolls the screen by on line */
+static void 
+scroll(void) {
+    uint8_t attr = (0 << 4) | (15 & 0x0F);
+    uint16_t blank = 0x20 | attr << 8;
+
+    if (ypos >= LINES+1) {
+        // Move the current line up
+        for (int i = 0 * COLUMNS; i < LINES * COLUMNS; ++i) {
+            video[i] = video[i+COLUMNS];
+        }
+
+        // The last line should be blank
+        for (int i = LINES * COLUMNS; i < (LINES+1) * COLUMNS; ++i) {
+            video[i] = blank;
+        }
+
+        ypos = LINES;
+    }
+}
 
 /* Put the character C on the screen. */
 void
 putchar (int c)
 {
-    if (c == '\n' || c == '\r')
-    {
-newline:
-        xpos = 0;
-        ypos++;
-        if (ypos >= LINES)
-            ypos = 0;
-        return;
+    uint8_t backColour = C_BLANK;
+    uint8_t foreColour = C_WHITE;
+
+    uint8_t attrByte = (backColour << 4) | (foreColour & 0x0F);
+    uint16_t attr = attrByte << 8;
+
+    switch (c) {
+        case 0x08:
+            xpos ? --xpos: 0;
+            break;
+        case 0x09:
+            xpos = (xpos + 8) & ~(8 - 1);
+            break;
+        case '\r':
+            xpos = 0;
+            break;
+        case '\n':
+            xpos = 0; ++ypos;
+            break;
     }
 
-    *(video + (xpos + ypos * COLUMNS) * 2) = c & 0xFF;
-    *(video + (xpos + ypos * COLUMNS) * 2 + 1) = ATTRIBUTE;
+    if (c >= ' ') {
+        video[ypos*COLUMNS + xpos] = c | attr;
+        ++xpos;
+    }
 
-    xpos++;
-    if (xpos >= COLUMNS)
-        goto newline;
+    if (xpos >= COLUMNS) {
+        ++ypos; xpos = 0; 
+    }
+
+
+    scroll();
+//    cursor();
 }
 
 /* Clear the screen and initialize VIDEO, XPOS and YPOS. */
@@ -103,11 +161,9 @@ cls (void)
 {
     int i;
 
-    video = (unsigned char *) VIDEO;
-
     for (i = 0; i < COLUMNS * LINES * 2; i++)
         *(video + i) = 0;
 
-    xpos = 0;
-    ypos = 0;
+    xpos = 0; ypos = 0;
+    cursor();
 }

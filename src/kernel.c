@@ -30,6 +30,7 @@
 #include "sys/irpts.h"
 #include "arch/i386/page.h"
 #include "arch/i386/8259a.h"
+#include "arch/i386/timer.h"
 
 /* Macros. */
      
@@ -148,19 +149,20 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_gdt();
     cls();
 
-    printk("Setup IDT...    ");
+    printk("Setup IDT...\n");
     setup_idt();
     printk("Done\n");
     
-    printk("Setup IRQ...    ");
+    printk("Setup IRQ...\n");
     setup_irq();
     printk("Done\n");
 
-    printk("Setup TIMER...    ");
+    printk("Setup TIMER...\n");
     setup_timer();
     printk("Done\n");
 
     printk("Hello CatOS!\n");
+
     while (1) {
     }
 }

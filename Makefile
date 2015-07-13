@@ -2,7 +2,7 @@ ARCH=i386
 
 VMODE=-DKERNEL_OFFSET=0xC0000000
 
-CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -fno-stack-protector -m32
+CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -fno-stack-protector -m32 -std=c99
 
 GRUBLIB=/boot/grub
 
