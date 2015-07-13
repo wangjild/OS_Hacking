@@ -88,10 +88,11 @@ string:
 static void 
 cursor(void) {
     uint16_t loc = ypos * COLUMNS + xpos;
-    out_byte(0x3D4, 14);
-    out_byte(0x3D5, loc >> 8);
-    out_byte(0x3D4, 15);
-    out_byte(0x3D5, loc);
+    out_byte(0x3D4, 0x0F);
+    out_byte(0x3D5, loc & 0xFF);
+    
+    out_byte(0x3D4, 0x0E);
+    out_byte(0x3D5, (loc >> 8)&0xFF);
 }
 
 
@@ -121,7 +122,7 @@ void
 putchar (int c)
 {
     uint8_t backColour = C_BLANK;
-    uint8_t foreColour = C_WHITE;
+    uint8_t foreColour = C_GREEN;
 
     uint8_t attrByte = (backColour << 4) | (foreColour & 0x0F);
     uint16_t attr = attrByte << 8;
@@ -152,7 +153,7 @@ putchar (int c)
 
 
     scroll();
-//    cursor();
+    cursor();
 }
 
 /* Clear the screen and initialize VIDEO, XPOS and YPOS. */
