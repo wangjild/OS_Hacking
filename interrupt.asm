@@ -149,8 +149,8 @@ isr_handler_stub:
     push    ds
     push    es
     push    fs 
-    push    esp
 
+    push    esp
     push    eax                 ; push errcode
     
     mov     eax,    [kernel_data_selector]
@@ -170,9 +170,8 @@ isr_handler_stub:
     pop     esi
     pop     edi
     pop     edx
-    pop     ecx
-    
-    pop     ebx                 ; skip the pushed errcode and isr number
+    pop     ecx 
+    pop     ebx
     pop     eax
    
     sti

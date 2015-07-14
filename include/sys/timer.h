@@ -2,7 +2,7 @@
 #define _TIMER_H_
 
 #define CLOCK_RATE 1193180
-#define CLOCK_INTERVAL 10 // 10 ms
+#define CLOCK_INTERVAL 1000 // 0.5s
 #define SECOND 1000 // 1000ms = 1s
 
 #define COUNTER0 0x40
@@ -30,6 +30,6 @@
 #define BINARY   0x00
 #define BCD      0x01
 
-void setup_timer();
+void setup_timer(uint16_t hz);
 
 #endif

@@ -157,12 +157,15 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_irq();
     printk("Done\n");
 
+    sti();
+
     printk("Setup TIMER...\n");
-    setup_timer();
+    setup_timer(2);
     printk("Done\n");
 
     printk("Hello CatOS!\n");
 
-    while (1) {
-    }
+    while (1) {}
+
+    __asm__ __volatile__ ("hlt\r\n");
 }

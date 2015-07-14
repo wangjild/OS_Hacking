@@ -101,10 +101,6 @@ void _do_cop_error(uint32_t errcode, struct isr_regs* regs) {
 
 static void set_pic() {
 
-  uint8_t mask1, mask2;
-  mask1 = in_byte(PIC1_DATA);
-  mask2 = in_byte(PIC2_DATA);
-
   /* ICW1 */
   out_byte(PIC1_CMD, 0x11); // edge driggered | 8字节中断向量 | 级联 | 需要PIC2
   io_delay();
@@ -135,13 +131,29 @@ static void set_pic() {
   io_delay();
   out_byte(PIC2_DATA, 0xFF);
   io_delay();
-
-  out_byte(PIC1_DATA, mask1);
-  out_byte(PIC1_DATA, mask2);
 }
 
 void setup_irq() {
   set_pic(); 
+}
+
+void enable_irq(uint8_t num) {
+    uint8_t oldmask, newmask;
+
+    if (num < 8) {
+        oldmask = in_byte(PIC1_DATA);
+        newmask = oldmask & ~(1 << num);
+        if (newmask != oldmask) {
+            out_byte(PIC1_DATA, newmask);
+        }
+    } else if (num < 16){
+        oldmask = in_byte(PIC2_DATA);
+        newmask = oldmask & ~(1 << (num - 8));
+        if (newmask != oldmask) {
+            out_byte(PIC2_DATA, newmask);
+        }
+    }
+
 }
 
 void PIC_sendEOI(uint8_t irq) {

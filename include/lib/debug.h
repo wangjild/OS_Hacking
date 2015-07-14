@@ -13,7 +13,7 @@
 }
 
 #define INFO(str) { \
-    printk("[INFO] %s", str); \
+    printk("[INFO] %s\n", str); \
 }
 
 #endif

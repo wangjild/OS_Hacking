@@ -6,10 +6,15 @@
 #include <sys/io.h>
 
 
-static int tick = 0;
+static uint32_t tick = 0;
 
 void _do_timer(uint32_t errcode, struct isr_regs* regs) {
-    INFO("int 0x20: timer interrupt");
+    
+    ++tick; 
+    
+    // INFO("Timer: TICKED!\n")
+    printk("errcode: %d, tick: %d\n", errcode, tick);
+    
     PIC_sendEOI(0);
 }
 
@@ -17,11 +22,11 @@ void init_timer_irq() {
   set_irq_gate(0, (uint32_t) &_do_timer);
 }
 
-void setup_timer() {
+void setup_timer(uint16_t hz) {
     
   init_timer_irq();
     
-  uint16_t rate = (uint16_t) (CLOCK_RATE * CLOCK_INTERVAL / SECOND);
+  uint16_t rate = CLOCK_RATE / hz;
 
   // 向8253 写入控制命令
   // 设置二进制，模式3，选择0通道，先写低字节，后写高字节
@@ -42,4 +47,6 @@ void setup_timer() {
   out_byte(PIC2_DATA, 0);
   io_delay();
   */
+
+  enable_irq(0);
 }
