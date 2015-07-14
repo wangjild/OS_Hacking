@@ -23,20 +23,13 @@
  *   Date:          13-12-14 22:58:40
  *   Descripton:    interupts 0 - 32 handlers and installers
  */
-#include "sys/type.h"
-#include "sys/protect.h"
+#include <sys/type.h>
+#include <lib/debug.h>
+#include <protect.h>
 #include <isr.h>
+#include <sys/io.h>
 
 #include "arch/i386/8259a.h"
-
-static void FATAL(const char* str, uint32_t errcode, struct isr_regs* regs) {
-    printk("[FATAL] %s\n", str);
-    printk("EIP:    %x:%x\nEFLAGS: %x\nESP:    %x:%x\n",
-            regs->cs, regs->eip, regs->eflags, regs->es, regs->uesp);
-    printk("ES:     %x\n", regs->es);
-
-    __asm__ __volatile__ ("hlt\r\n");
-}
 
 void _do_divide0_error(uint32_t errcode, struct isr_regs* regs) {
     FATAL("int0: divide 0 error", errcode, regs);
@@ -106,7 +99,55 @@ void _do_cop_error(uint32_t errcode, struct isr_regs* regs) {
     FATAL("int16: coprocesser error", errcode, regs);
 }
 
-void _do_timer(uint32_t errcode, struct isr_regs* regs) {
-    FATAL("int 0x20: timer interrupt", errcode, regs);
-    PIC_sendEOI(0);
+static void set_pic() {
+
+  uint8_t mask1, mask2;
+  mask1 = in_byte(PIC1_DATA);
+  mask2 = in_byte(PIC2_DATA);
+
+  /* ICW1 */
+  out_byte(PIC1_CMD, 0x11); // edge driggered | 8字节中断向量 | 级联 | 需要PIC2
+  io_delay();
+  out_byte(PIC2_CMD, 0x11); 
+  io_delay();
+
+  /* ICW2 */
+  out_byte(PIC1_DATA, 0x20); // 主PIC2 设置IRQ0-7对应的中断向量号
+  io_delay();
+  out_byte(PIC2_DATA, 0x28);  // 从PIC2 设置IRQ8-15对应的中断向量号
+  io_delay();
+
+  /* ICW3 */
+  out_byte(PIC1_DATA, 0x04); // IRQ2 对应从8259
+  io_delay();
+  out_byte(PIC2_DATA, 0x02);  // 从8259 对应主IRQ2
+  io_delay();
+
+  /* ICW4 */
+  out_byte(PIC1_DATA, 0x01); // 主PIC2 x86模式
+  io_delay();
+  out_byte(PIC2_DATA, 0x01);  // 从PIC2
+  io_delay();
+
+  /* OCW1 */
+  /*所有中断现在全部屏蔽*/
+  out_byte(PIC1_DATA, 0xFF);
+  io_delay();
+  out_byte(PIC2_DATA, 0xFF);
+  io_delay();
+
+  out_byte(PIC1_DATA, mask1);
+  out_byte(PIC1_DATA, mask2);
+}
+
+void setup_irq() {
+  set_pic(); 
+}
+
+void PIC_sendEOI(uint8_t irq) {
+  if (irq >= 8) {
+    out_byte(PIC2_CMD, PIC_EOI);
+  }
+
+  out_byte(PIC1_CMD, PIC_EOI);
 }

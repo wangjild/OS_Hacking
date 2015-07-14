@@ -30,7 +30,7 @@
 #include <isr.h>
 #include "arch/i386/page.h"
 #include "arch/i386/8259a.h"
-#include "arch/i386/timer.h"
+#include "sys/timer.h"
 
 /* Macros. */
      
@@ -157,12 +157,10 @@ kernel_main (unsigned long addr, unsigned long magic)
     setup_irq();
     printk("Done\n");
 
-//    printk("Setup TIMER...\n");
-//    setup_timer();
-//    printk("Done\n");
+    printk("Setup TIMER...\n");
+    setup_timer();
+    printk("Done\n");
 
-    int i = 1 / 0;
-    
     printk("Hello CatOS!\n");
 
     while (1) {

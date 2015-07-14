@@ -197,4 +197,9 @@ struct idt_ptr {
 extern const uint16_t kernel_code_selector;
 extern const uint16_t kernel_data_selector;
 
+void set_idt_gate(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flaGs);
+
+#define set_irq_gate(num, handler) \
+    set_idt_gate(num+32, handler, kernel_code_selector, IDT_DPL0 | IDT_TRAP)
+
 #endif

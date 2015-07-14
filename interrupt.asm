@@ -41,6 +41,15 @@ isr%1:
   jmp isr_handler_stub
 %endmacro
 
+%macro IRQ 1
+global irq%1
+irq%1:
+  cli
+  push byte %1
+  add byte [esp], 32   ;;将IRQ0 映射到 ISR32
+  jmp isr_handler_stub
+%endmacro
+
 ; int0 除0异常 
 ISR_NOERRCODE 0
 
@@ -108,6 +117,23 @@ ISR_NOERRCODE 28
 ISR_NOERRCODE 29
 ISR_NOERRCODE 30
 ISR_NOERRCODE 31
+
+IRQ 0
+IRQ 1
+IRQ 2
+IRQ 3
+IRQ 4
+IRQ 5
+IRQ 6
+IRQ 7
+IRQ 8
+IRQ 9
+IRQ 10
+IRQ 11
+IRQ 12
+IRQ 13
+IRQ 14
+IRQ 15
 
 extern kernel_data_selector
 isr_handler_stub:

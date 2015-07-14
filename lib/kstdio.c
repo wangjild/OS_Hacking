@@ -28,7 +28,7 @@
 #include <lib/kstdio.h>
 #include <lib/kstdlib.h>
 
-#include <arch/i386/io.h>
+#include <sys/io.h>
 
 /* Variables. */
 /* Save the X position. */

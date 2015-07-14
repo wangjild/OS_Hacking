@@ -24,9 +24,10 @@
  *   Descripton:    Protect Model Operations
  */
 
-#include "sys/protect.h"
+#include <protect.h>
 #include "arch/i386/page.h"
 #include <isr.h>
+#include <lib/kstdlib.h>
 
 #define GDT_OFFSET 128
 #define SEG_KERNEL_C    SEG_KCODE_FLAT
@@ -72,7 +73,7 @@ struct idt_ptr   idtptr;
             ); \
 }
 
-static void set_idt_gate(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
+void set_idt_gate(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
     idts[idx].offset_low = base & 0x0FFFF;
     idts[idx].offset_high = (base >> 16) &0x0FFFF;
     idts[idx].selector = selector;
@@ -81,6 +82,10 @@ static void set_idt_gate(uint32_t idx, uint32_t base, uint16_t selector, uint8_t
 
 #define set_isr_gate(num, handler) \
     set_idt_gate(num, handler, kernel_code_selector, IDT_DPL0 | IDT_TRAP)
+
+#define set_irq_gage(num, handler) \
+    set_idt_gate(num+32, handler, kernel_code_selector, IDT_DPL0 | IDT_TRAP)
+
 
 void setup_idt() {
     memset(&idts, 0, sizeof(idts));
@@ -110,9 +115,5 @@ void setup_idt() {
         set_isr_gate(i, (uint32_t) &_do_reserved);
     }
 
-    //设置定时器
-    //  set_idt(0x20, (uint32_t) &_do_timer, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
-    //    set_idt(0x80, (uint32_t) &reserved, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
-    //
     idt_flush();
 }
