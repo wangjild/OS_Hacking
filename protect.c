@@ -26,7 +26,7 @@
 
 #include "sys/protect.h"
 #include "arch/i386/page.h"
-#include "sys/isr.h"
+#include <isr.h>
 
 #define GDT_OFFSET 128
 #define SEG_KERNEL_C    SEG_KCODE_FLAT
@@ -66,18 +66,21 @@ void setup_gdt() {
 struct idt_entry idts[IDT_OFFSET];
 struct idt_ptr   idtptr;
 
-#define idt_load() { \
+#define idt_flush() { \
     __asm__ __volatile__ ( \
             "lidt %0" :: "m"(idtptr) \
             ); \
 }
 
-void set_idt(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
+static void set_idt_gate(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags) {
     idts[idx].offset_low = base & 0x0FFFF;
     idts[idx].offset_high = (base >> 16) &0x0FFFF;
     idts[idx].selector = selector;
     idts[idx].flags = flags;
 }
+
+#define set_isr_gate(num, handler) \
+    set_idt_gate(num, handler, kernel_code_selector, IDT_DPL0 | IDT_TRAP)
 
 void setup_idt() {
     memset(&idts, 0, sizeof(idts));
@@ -85,15 +88,31 @@ void setup_idt() {
     idtptr.base = (uint32_t) &idts;
     idtptr.limit = sizeof(idts) - 1;
 
-    set_idt(0, (uint32_t) &divide0_error, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-    set_idt(1, (uint32_t) &debug, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-    set_idt(2, (uint32_t) &nmi, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-    set_idt(3, (uint32_t) &debug_break, kernel_code_selector, IDT_DPL0 | IDT_TRAP);
-    set_idt(13, (uint32_t) &general_protection, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
+    set_isr_gate(0, (uint32_t) &_do_divide0_error);
+    set_isr_gate(1, (uint32_t) &_do_debug);
+    set_isr_gate(2, (uint32_t) &_do_nmi);
+    set_isr_gate(3, (uint32_t) &_do_debug_break);
+    set_isr_gate(4, (uint32_t) &_do_overflow);
+    set_isr_gate(5, (uint32_t) &_do_bounds_check);
+    set_isr_gate(6, (uint32_t) &_do_invalid_op);
+    set_isr_gate(7, (uint32_t) &_do_device_fail);
+    set_isr_gate(8, (uint32_t) &_do_double_fault);
+    set_isr_gate(9, (uint32_t) &_do_cop_segment);
+    set_isr_gate(10, (uint32_t) &_do_tss_inval);
+    set_isr_gate(11, (uint32_t) &_do_segment_unpresent);
+    set_isr_gate(12, (uint32_t) &_do_stack_segment);
+    set_isr_gate(13, (uint32_t) &_do_general_protection);
+    set_isr_gate(14, (uint32_t) &_do_page_fault);
+    set_isr_gate(15, (uint32_t) &_do_reserved);
+    set_isr_gate(16, (uint32_t) &_do_cop_error);
+   
+    for (int i = 17; i < 32; ++i) {
+        set_isr_gate(i, (uint32_t) &_do_reserved);
+    }
 
     //设置定时器
     //  set_idt(0x20, (uint32_t) &_do_timer, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
     //    set_idt(0x80, (uint32_t) &reserved, kernel_code_selector, IDT_DPL0 | IDT_IRPT);
     //
-    idt_load();
+    idt_flush();
 }

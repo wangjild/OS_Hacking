@@ -23,168 +23,131 @@
 
 [BITS 32]
 
+%macro ISR_NOERRCODE 1 
+global isr%1
+isr%1:
+  cli
+  push byte 0x00  ;; push dummy error code
+  push byte %1
+  jmp isr_handler_stub
+%endmacro
+
+
+%macro ISR_ERRCODE 1
+global isr%1
+isr%1:
+  cli
+  push byte %1
+  jmp isr_handler_stub
+%endmacro
+
 ; int0 除0异常 
-global divide0_error
-extern _do_divide0_error
-divide0_error:
-    push    0x00 ; 当做错误码 push 入栈
-    push    _do_divide0_error
-    jmp     exception_handler
+ISR_NOERRCODE 0
 
 ; int1 单步调试
-global debug
-extern _do_debug
-debug:
-    push    0x00
-    push    _do_debug
-    jmp     exception_handler
+ISR_NOERRCODE 1
 
 ; int2 NMI
-global nmi
-extern _do_nmi
-nmi:
-    push    0x00
-    push    _do_nmi
-    jmp     exception_handler
+ISR_NOERRCODE 2
 
 ; int3 断点
-global debug_break
-extern _do_debug_break
-debug_break:
-    push    0x00
-    push    _do_debug_break
-    jmp     exception_handler
+ISR_NOERRCODE 3
     
 ; int4 溢出
-global overflow
-extern _do_overflow
-overflow:
-    push    0x00
-    push    _do_overflow
-    jmp     exception_handler
+ISR_NOERRCODE 4
 
 ; int5 寻址到有效地址以外
-global bounds_check
-extern _do_bounds_check
-bounds_check:
-    push    0x00
-    push    _do_bounds_check
-    jmp     exception_handler
+ISR_NOERRCODE 5
 
 ; int6 非法操作码
-global invalid_op
-extern _do_invalid_op
-invalid_op:
-    push    0x00
-    push    _do_invalid_op
-    jmp     exception_handler
+ISR_NOERRCODE 6
 
 ; int7 设备故障
-global device_fail
-extern _do_device_fail
-device_fail:
-    push    _do_device_fail
-    jmp     exception_handler
+ISR_NOERRCODE 7
 
 ; int8 双故障出错
-global double_fault
-extern _do_double_fault
-double_fault:
-    push    _do_double_fault
-    jmp     exception_handler
+ISR_ERRCODE   8
 
 ; int9 协处理器段错误
-global cop_segment
-extern _do_cop_segment
-cop_segment:
-    push    _do_cop_segment
-    jmp     exception_handler
+ISR_NOERRCODE 9
 
 ; int10 TSS无效
-global tss_inval
-extern _do_tss_inval
-tss_inval:
-    push    _do_tss_inval
-    jmp     exception_handler
+ISR_ERRCODE   10
 
 ; int11 段不存在
-global segment_unpresent
-extern _do_segment_unpresent
-segment_unpresent:
-    push    _do_segment_unpresent
-    jmp     exception_handler
+ISR_ERRCODE   11
 
 ; int12 堆栈段不存在或者越界
-global stack_segment
-extern _do_stack_segment
-stack_segment:
-    push    _do_stack_segment
-    jmp     exception_handler
+ISR_ERRCODE   12
 
 ; int13 不符合386保护机制
-global general_protection
-extern _do_general_protection
-general_protection:
-    push    _do_general_protection
-    jmp     exception_handler
+ISR_ERRCODE   13
 
 ; int14 页不在内存
-global page_fault
-extern _do_page_fault
-page_fault:
-    push _do_page_fault
-    jmp     exception_handler 
+ISR_ERRCODE   14
 
 ; int15 保留
-global reserved
-extern _do_reserved
-reserved:
-    push    0x00
-    push    _do_reserved
-    jmp     exception_handler
+ISR_NOERRCODE   15
 
 ; int16 协处理器出错信号
-global cop_error
-extern _do_cop_error
-cop_error:
-    push    _do_cop_error
-    jmp     exception_handler
+ISR_NOERRCODE   16
 
-; int 32 定时器
-global do_timer
-extern _do_timer
-do_timer:
-  push  _do_timer
-  jmp   exception_handler
+; reserved
+ISR_NOERRCODE 17
+ISR_NOERRCODE 18
+ISR_NOERRCODE 19
+ISR_NOERRCODE 20
+ISR_NOERRCODE 21
+ISR_NOERRCODE 22
+ISR_NOERRCODE 23
+ISR_NOERRCODE 24
+ISR_NOERRCODE 25
+ISR_NOERRCODE 26
+ISR_NOERRCODE 27
+ISR_NOERRCODE 28
+ISR_NOERRCODE 29
+ISR_NOERRCODE 30
+ISR_NOERRCODE 31
 
 extern kernel_data_selector
-exception_handler:
+isr_handler_stub:
     xchg    [esp+4],  eax       ; exchange errcode <-> eax
     xchg    [esp],    ebx       ; exchange function <-> ebx
+    
     push    ecx
     push    edx
     push    edi
     push    esi
     push    ebp
+    
     push    ds
     push    es
-    push    fs
+    push    fs 
     push    esp
+
     push    eax                 ; push errcode
+    
     mov     eax,    [kernel_data_selector]
     mov     ds,     ax
     mov     es,     ax
     mov     fs,     ax
+    
     call    ebx
-    add     esp,    0x08
+    
+    add     esp,    0x08        ; skip the esp and eax
+    
     pop     fs
     pop     es
     pop     ds
+    
     pop     ebp
     pop     esi
     pop     edi
     pop     edx
     pop     ecx
-    pop     ebx
+    
+    pop     ebx                 ; skip the pushed errcode and isr number
     pop     eax
+   
+    sti
     iret
