@@ -80,8 +80,8 @@ void set_idt_gate(uint32_t idx, uint32_t base, uint16_t selector, uint8_t flags)
     idts[idx].flags = flags;
 }
 
-#define set_isr_gate(num, handler) \
-    set_idt_gate(num, handler, kernel_code_selector, IDT_DPL0 | IDT_TRAP)
+#define set_isr_gate(num) \
+    set_idt_gate(num, (uint32_t) &isr##num, kernel_code_selector, IDT_DPL0 | IDT_TRAP)
 
 #define set_irq_gage(num, handler) \
     set_idt_gate(num+32, handler, kernel_code_selector, IDT_DPL0 | IDT_TRAP)
@@ -93,27 +93,38 @@ void setup_idt() {
     idtptr.base = (uint32_t) &idts;
     idtptr.limit = sizeof(idts) - 1;
 
-    set_isr_gate(0, (uint32_t) &_do_divide0_error);
-    set_isr_gate(1, (uint32_t) &_do_debug);
-    set_isr_gate(2, (uint32_t) &_do_nmi);
-    set_isr_gate(3, (uint32_t) &_do_debug_break);
-    set_isr_gate(4, (uint32_t) &_do_overflow);
-    set_isr_gate(5, (uint32_t) &_do_bounds_check);
-    set_isr_gate(6, (uint32_t) &_do_invalid_op);
-    set_isr_gate(7, (uint32_t) &_do_device_fail);
-    set_isr_gate(8, (uint32_t) &_do_double_fault);
-    set_isr_gate(9, (uint32_t) &_do_cop_segment);
-    set_isr_gate(10, (uint32_t) &_do_tss_inval);
-    set_isr_gate(11, (uint32_t) &_do_segment_unpresent);
-    set_isr_gate(12, (uint32_t) &_do_stack_segment);
-    set_isr_gate(13, (uint32_t) &_do_general_protection);
-    set_isr_gate(14, (uint32_t) &_do_page_fault);
-    set_isr_gate(15, (uint32_t) &_do_reserved);
-    set_isr_gate(16, (uint32_t) &_do_cop_error);
-   
-    for (int i = 17; i < 32; ++i) {
-        set_isr_gate(i, (uint32_t) &_do_reserved);
-    }
+    set_isr_gate(0);
+    set_isr_gate(1);
+    set_isr_gate(2);
+    set_isr_gate(3);
+    set_isr_gate(4);
+    set_isr_gate(5);
+    set_isr_gate(6);
+    set_isr_gate(7);
+    set_isr_gate(8);
+    set_isr_gate(9);
+    set_isr_gate(10);
+    set_isr_gate(11);
+    set_isr_gate(12);
+    set_isr_gate(13);
+    set_isr_gate(14);
+    set_isr_gate(15);
+    set_isr_gate(16);
+    set_isr_gate(17);
+    set_isr_gate(18);
+    set_isr_gate(19);
+    set_isr_gate(20);
+    set_isr_gate(21);
+    set_isr_gate(22);
+    set_isr_gate(23);
+    set_isr_gate(24);
+    set_isr_gate(25);
+    set_isr_gate(26);
+    set_isr_gate(27);
+    set_isr_gate(28);
+    set_isr_gate(29);
+    set_isr_gate(30);
+    set_isr_gate(31);
 
     idt_flush();
 }

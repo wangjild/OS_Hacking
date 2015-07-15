@@ -23,101 +23,169 @@
 
 [BITS 32]
 
-%macro ISR_NOERRCODE 1 
+; int0 除0异常 
+global isr0 
+extern _do_divide0_error
+isr0:
+    push    0x00 ; 当做错误码 push 入栈
+    push    _do_divide0_error
+    jmp     exception_handler
+
+; int1 单步调试
+global isr1
+extern _do_debug
+isr1:
+    push    0x00
+    push    _do_debug
+    jmp     exception_handler
+
+; int2 NMI
+global isr2
+extern _do_nmi
+isr2:
+    push    0x00
+    push    _do_nmi
+    jmp     exception_handler
+
+; int3 断点
+global isr3
+extern _do_debug_break
+isr3:
+    push    0x00
+    push    _do_debug_break
+    jmp     exception_handler
+    
+; int4 溢出
+global isr4
+extern _do_overflow
+isr4:
+    push    0x00
+    push    _do_overflow
+    jmp     exception_handler
+
+; int5 寻址到有效地址以外
+global isr5
+extern _do_bounds_check
+isr5:
+    push    0x00
+    push    _do_bounds_check
+    jmp     exception_handler
+
+; int6 非法操作码
+global isr6
+extern _do_invalid_op
+isr6:
+    push    0x00
+    push    _do_invalid_op
+    jmp     exception_handler
+
+; int7 设备故障
+global isr7
+extern _do_device_fail
+isr7:
+    push    _do_device_fail
+    jmp     exception_handler
+
+; int8 双故障出错
+global isr8
+extern _do_double_fault
+isr8:
+    push    _do_double_fault
+    jmp     exception_handler
+
+; int9 协处理器段错误
+global isr9
+extern _do_cop_segment
+isr9:
+    push    _do_cop_segment
+    jmp     exception_handler
+
+; int10 TSS无效
+global isr10
+extern _do_tss_inval
+isr10:
+    push    _do_tss_inval
+    jmp     exception_handler
+
+; int11 段不存在
+global isr11
+extern _do_segment_unpresent
+isr11:
+    push    _do_segment_unpresent
+    jmp     exception_handler
+
+; int12 堆栈段不存在或者越界
+global isr12
+extern _do_stack_segment
+isr12:
+    push    _do_stack_segment
+    jmp     exception_handler
+
+; int13 不符合386保护机制
+global isr13
+extern _do_general_protection
+isr13:
+    push    _do_general_protection
+    jmp     exception_handler
+
+; int14 页不在内存
+global isr14
+extern _do_page_fault
+isr14:
+    push _do_page_fault
+    jmp     exception_handler 
+
+; int15 保留
+global isr15
+extern _do_reserved
+isr15:
+    push    0x00
+    push    _do_reserved
+    jmp     exception_handler
+
+; int16 协处理器出错信号
+global isr16
+extern _do_cop_error
+isr16:
+    push    _do_cop_error
+    jmp     exception_handler
+
+; reserved for 17-31
+
+%macro ISR 1
 global isr%1
+extern _do_reserved
 isr%1:
-  cli
-  push byte 0x00  ;; push dummy error code
-  push byte %1
-  jmp isr_handler_stub
+    push    0x11
+    push    _do_reserved
+    jmp     exception_handler
 %endmacro
 
+ISR 17
+ISR 18
+ISR 19
+ISR 20
+ISR 21
+ISR 22
+ISR 23
+ISR 24
+ISR 25
+ISR 26
+ISR 27
+ISR 28
+ISR 29
+ISR 30
+ISR 31
 
-%macro ISR_ERRCODE 1
-global isr%1
-isr%1:
-  cli
-  push byte %1
-  jmp isr_handler_stub
-%endmacro
 
 %macro IRQ 1
 global irq%1
-irq%1:
-  cli
-  push byte %1
-  add byte [esp], 32   ;;将IRQ0 映射到 ISR32
-  jmp isr_handler_stub
+extern _do_irq%1
+push    _do_irq%1
+jmp     exception_handler
 %endmacro
 
-; int0 除0异常 
-ISR_NOERRCODE 0
-
-; int1 单步调试
-ISR_NOERRCODE 1
-
-; int2 NMI
-ISR_NOERRCODE 2
-
-; int3 断点
-ISR_NOERRCODE 3
-    
-; int4 溢出
-ISR_NOERRCODE 4
-
-; int5 寻址到有效地址以外
-ISR_NOERRCODE 5
-
-; int6 非法操作码
-ISR_NOERRCODE 6
-
-; int7 设备故障
-ISR_NOERRCODE 7
-
-; int8 双故障出错
-ISR_ERRCODE   8
-
-; int9 协处理器段错误
-ISR_NOERRCODE 9
-
-; int10 TSS无效
-ISR_ERRCODE   10
-
-; int11 段不存在
-ISR_ERRCODE   11
-
-; int12 堆栈段不存在或者越界
-ISR_ERRCODE   12
-
-; int13 不符合386保护机制
-ISR_ERRCODE   13
-
-; int14 页不在内存
-ISR_ERRCODE   14
-
-; int15 保留
-ISR_NOERRCODE   15
-
-; int16 协处理器出错信号
-ISR_NOERRCODE   16
-
-; reserved
-ISR_NOERRCODE 17
-ISR_NOERRCODE 18
-ISR_NOERRCODE 19
-ISR_NOERRCODE 20
-ISR_NOERRCODE 21
-ISR_NOERRCODE 22
-ISR_NOERRCODE 23
-ISR_NOERRCODE 24
-ISR_NOERRCODE 25
-ISR_NOERRCODE 26
-ISR_NOERRCODE 27
-ISR_NOERRCODE 28
-ISR_NOERRCODE 29
-ISR_NOERRCODE 30
-ISR_NOERRCODE 31
-
+; irq mapped 32 - 47
 IRQ 0
 IRQ 1
 IRQ 2
@@ -136,7 +204,7 @@ IRQ 14
 IRQ 15
 
 extern kernel_data_selector
-isr_handler_stub:
+exception_handler:
     xchg    [esp+4],  eax       ; exchange errcode <-> eax
     xchg    [esp],    ebx       ; exchange function <-> ebx
     

@@ -99,7 +99,7 @@ void _do_cop_error(uint32_t errcode, struct isr_regs* regs) {
     FATAL("int16: coprocesser error", errcode, regs);
 }
 
-static void set_pic() {
+static void setup_pic() {
 
   /* ICW1 */
   out_byte(PIC1_CMD, 0x11); // edge driggered | 8字节中断向量 | 级联 | 需要PIC2
@@ -134,7 +134,7 @@ static void set_pic() {
 }
 
 void setup_irq() {
-  set_pic(); 
+  setup_pic(); 
 }
 
 void enable_irq(uint8_t num) {

@@ -9,10 +9,10 @@
 static uint32_t tick = 0;
 
 void _do_timer(uint32_t errcode, struct isr_regs* regs) {
-    
+   
+    __asm__ __volatile__ ("xchgw %bx, %bx");
     ++tick; 
     
-    // INFO("Timer: TICKED!\n")
     printk("errcode: %d, tick: %d\n", errcode, tick);
     
     PIC_sendEOI(0);

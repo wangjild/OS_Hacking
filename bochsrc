@@ -6,6 +6,7 @@
 megs: 32
 
 #display_library: term
+display_library: x, options="gui_debug"
 
 # filename of ROM images
 romimage: file=/usr/share/bochs/BIOS-bochs-latest
@@ -24,5 +25,6 @@ mouse: enabled=0
 log: bochs.log
 # enable key mapping, using US layout as default.
 keyboard_mapping: enabled=1, map=/usr/share/bochs/keymaps/x11-pc-us.map
-debug: action=ignore
-clock: sync=realtime, time0=local, rtc_sync=1
+#debug: action=ignore
+clock: sync=realtime, time0=local
+magic_break: enabled=1
