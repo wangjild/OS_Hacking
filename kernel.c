@@ -25,11 +25,10 @@
 #include "lib/kstdio.h"
 #include "lib/kstdlib.h"
 
-#include "sys/i8259.h"
 //#include <sys/mm.h>
 #include <isr.h>
-#include "arch/i386/page.h"
-#include "arch/i386/8259a.h"
+#include "sys/page.h"
+#include "sys/8259a.h"
 #include "sys/timer.h"
 
 /* Macros. */

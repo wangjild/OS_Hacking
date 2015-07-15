@@ -25,7 +25,7 @@
  */
 
 #include <protect.h>
-#include "arch/i386/page.h"
+#include <sys/page.h>
 #include <isr.h>
 #include <lib/kstdlib.h>
 

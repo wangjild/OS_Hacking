@@ -25,7 +25,7 @@
  */
 
 #include "sys/type.h"
-#include "arch/i386/page.h"
+#include <sys/page.h>
 
 /* 全局页目录 */
 pgdir_t g_pgdir __pgdir;

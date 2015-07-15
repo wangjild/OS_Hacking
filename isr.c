@@ -29,7 +29,7 @@
 #include <isr.h>
 #include <sys/io.h>
 
-#include "arch/i386/8259a.h"
+#include <sys/8259a.h>
 
 void _do_divide0_error(uint32_t errcode, struct isr_regs* regs) {
     FATAL("int0: divide 0 error", errcode, regs);
