@@ -8,9 +8,8 @@
 
 static uint32_t tick = 0;
 
-void _do_timer(uint32_t errcode, struct isr_regs* regs) {
+void _do_irq0(uint32_t errcode, irq_args_t* args) {
    
-    __asm__ __volatile__ ("xchgw %bx, %bx");
     ++tick; 
     
     printk("errcode: %d, tick: %d\n", errcode, tick);
@@ -18,8 +17,10 @@ void _do_timer(uint32_t errcode, struct isr_regs* regs) {
     PIC_sendEOI(0);
 }
 
+extern void irq0();
+
 void init_timer_irq() {
-  set_irq_gate(0, (uint32_t) &_do_timer);
+  set_irq_gate(0, (uint32_t) &irq0);
 }
 
 void setup_timer(uint16_t hz) {

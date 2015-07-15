@@ -160,16 +160,11 @@ kernel_main (unsigned long addr, unsigned long magic)
 
     sti();
     
-    // printk("Setup TIMER...\n");
-    // setup_timer(1000);
-    // printk("Done\n");
+    printk("Setup TIMER...\n");
+    setup_timer(10);
+    printk("Done\n");
 
-    // printk("Hello CatOS!\n");
-
-    __asm__ __volatile__ ("xchgw %bx, %bx");
-    int i = 1 / 0;
-
-    while (1) {}
+    printk("Hello CatOS!\n");
 
     __asm__ __volatile__ ("hlt\r\n");
 }

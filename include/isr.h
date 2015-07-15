@@ -7,13 +7,13 @@
 #define sti() __asm__ __volatile__ ("sti" ::)
 #define nop() __asm__ __volatile__ ("nop" ::)
 
-struct isr_regs
+typedef struct isr_regs
 {
-    uint32_t    fs, es, ds; /* 压入上一个段。 */
+    uint32_t    fs, es, ds, gs; /* 压入上一个段。 */
     uint32_t    ebp, esi, edi, edx, ecx; /* 由push 压入*/
     uint32_t    isr_num, errcode;   /* 由exchange 压入*/
     uint32_t    eip, cs, eflags, uesp, ss; /* 由处理器自动压入。 */ 
-};
+} irq_args_t;
 
 void _do_divide0_error(uint32_t errcode, struct isr_regs* regs);
 void _do_debug(uint32_t errcode, struct isr_regs* regs);

@@ -32,4 +32,6 @@
 
 void setup_timer(uint16_t hz);
 
+#include <isr.h>
+void _do_irq0(uint32_t errcode, irq_args_t* args);
 #endif

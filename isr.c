@@ -159,7 +159,9 @@ void enable_irq(uint8_t num) {
 void PIC_sendEOI(uint8_t irq) {
   if (irq >= 8) {
     out_byte(PIC2_CMD, PIC_EOI);
+    nop();
   }
 
   out_byte(PIC1_CMD, PIC_EOI);
+  nop();
 }

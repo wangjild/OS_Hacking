@@ -27,6 +27,7 @@
 global isr0 
 extern _do_divide0_error
 isr0:
+    cli
     push    0x00 ; 当做错误码 push 入栈
     push    _do_divide0_error
     jmp     exception_handler
@@ -35,6 +36,7 @@ isr0:
 global isr1
 extern _do_debug
 isr1:
+    cli
     push    0x00
     push    _do_debug
     jmp     exception_handler
@@ -43,6 +45,7 @@ isr1:
 global isr2
 extern _do_nmi
 isr2:
+    cli
     push    0x00
     push    _do_nmi
     jmp     exception_handler
@@ -51,6 +54,7 @@ isr2:
 global isr3
 extern _do_debug_break
 isr3:
+    cli
     push    0x00
     push    _do_debug_break
     jmp     exception_handler
@@ -59,6 +63,7 @@ isr3:
 global isr4
 extern _do_overflow
 isr4:
+    cli
     push    0x00
     push    _do_overflow
     jmp     exception_handler
@@ -67,6 +72,7 @@ isr4:
 global isr5
 extern _do_bounds_check
 isr5:
+    cli
     push    0x00
     push    _do_bounds_check
     jmp     exception_handler
@@ -75,6 +81,7 @@ isr5:
 global isr6
 extern _do_invalid_op
 isr6:
+    cli
     push    0x00
     push    _do_invalid_op
     jmp     exception_handler
@@ -83,6 +90,7 @@ isr6:
 global isr7
 extern _do_device_fail
 isr7:
+    cli
     push    _do_device_fail
     jmp     exception_handler
 
@@ -90,6 +98,7 @@ isr7:
 global isr8
 extern _do_double_fault
 isr8:
+    cli
     push    _do_double_fault
     jmp     exception_handler
 
@@ -97,6 +106,7 @@ isr8:
 global isr9
 extern _do_cop_segment
 isr9:
+    cli
     push    _do_cop_segment
     jmp     exception_handler
 
@@ -104,6 +114,7 @@ isr9:
 global isr10
 extern _do_tss_inval
 isr10:
+    cli
     push    _do_tss_inval
     jmp     exception_handler
 
@@ -111,6 +122,7 @@ isr10:
 global isr11
 extern _do_segment_unpresent
 isr11:
+    cli
     push    _do_segment_unpresent
     jmp     exception_handler
 
@@ -118,6 +130,7 @@ isr11:
 global isr12
 extern _do_stack_segment
 isr12:
+    cli
     push    _do_stack_segment
     jmp     exception_handler
 
@@ -125,6 +138,7 @@ isr12:
 global isr13
 extern _do_general_protection
 isr13:
+    cli
     push    _do_general_protection
     jmp     exception_handler
 
@@ -132,13 +146,15 @@ isr13:
 global isr14
 extern _do_page_fault
 isr14:
-    push _do_page_fault
+    cli
+    push    _do_page_fault
     jmp     exception_handler 
 
 ; int15 保留
 global isr15
 extern _do_reserved
 isr15:
+    cli
     push    0x00
     push    _do_reserved
     jmp     exception_handler
@@ -147,6 +163,7 @@ isr15:
 global isr16
 extern _do_cop_error
 isr16:
+    cli
     push    _do_cop_error
     jmp     exception_handler
 
@@ -156,7 +173,8 @@ isr16:
 global isr%1
 extern _do_reserved
 isr%1:
-    push    0x11
+    cli
+    push    0x00
     push    _do_reserved
     jmp     exception_handler
 %endmacro
@@ -181,27 +199,31 @@ ISR 31
 %macro IRQ 1
 global irq%1
 extern _do_irq%1
-push    _do_irq%1
-jmp     exception_handler
+irq%1:
+    cli
+    xchg    bx, bx
+    push    byte    0   ; dummy errcode
+    push    _do_irq%1
+    jmp     exception_handler
 %endmacro
 
 ; irq mapped 32 - 47
 IRQ 0
-IRQ 1
-IRQ 2
-IRQ 3
-IRQ 4
-IRQ 5
-IRQ 6
-IRQ 7
-IRQ 8
-IRQ 9
-IRQ 10
-IRQ 11
-IRQ 12
-IRQ 13
-IRQ 14
-IRQ 15
+;IRQ 1
+;IRQ 2
+;IRQ 3
+;IRQ 4
+;IRQ 5
+;IRQ 6
+;IRQ 7
+;IRQ 8
+;IRQ 9
+;IRQ 10
+;IRQ 11
+;IRQ 12
+;IRQ 13
+;IRQ 14
+;IRQ 15
 
 extern kernel_data_selector
 exception_handler:
@@ -216,31 +238,36 @@ exception_handler:
     
     push    ds
     push    es
-    push    fs 
+    push    fs
+    push    gs
 
-    push    esp
+    push    esp                 ; push the [struct isr_regs *]
     push    eax                 ; push errcode
     
     mov     eax,    [kernel_data_selector]
     mov     ds,     ax
     mov     es,     ax
     mov     fs,     ax
-    
+    mov     gs,     ax
+
     call    ebx
     
-    add     esp,    0x08        ; skip the esp and eax
+    pop     eax                 ; skip the esp and eax
+    pop     esp
     
     pop     fs
     pop     es
     pop     ds
+    pop     gs
     
     pop     ebp
     pop     esi
     pop     edi
     pop     edx
     pop     ecx 
-    pop     ebx
-    pop     eax
-   
+
+    pop     ebx                ; pop the exchanged function addr
+    pop     eax            
+    xchg    bx, bx
     sti
     iret
