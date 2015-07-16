@@ -2,11 +2,11 @@ ARCH=i386
 
 VMODE=-DKERNEL_OFFSET=0xC0000000
 
-CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -fno-stack-protector -m32 -std=c99
+CFLAGS=-I . -I ./include -I ./include/boot -fno-builtin -m32 -std=c99
 
 GRUBLIB=/boot/grub
 
-cobj = lib/kstdlib.o lib/kstdio.o kernel.o protect.o isr.o sys/page.o sys/io.o sys/timer.o
+cobj = mm/memory.o lib/kstdlib.o lib/kstdio.o kernel.o protect.o isr.o sys/page.o sys/io.o sys/timer.o
 asmobj = boot/$(ARCH)/loader.o interrupt.o
 objects = $(cobj) $(asmobj)
 

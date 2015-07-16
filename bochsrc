@@ -27,5 +27,5 @@ log: bochs.log
 keyboard_mapping: enabled=1, map=/usr/share/bochs/keymaps/x11-pc-us.map
 #debug: action=ignore
 clock: sync=realtime, time0=local
-#magic_break: enabled=1
+magic_break: enabled=1
 

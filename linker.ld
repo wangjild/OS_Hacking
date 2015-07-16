@@ -6,6 +6,7 @@ KERNEL_VIRADDR  = KERNEL_OFFSET +  KERNEL_PHYADDR; /* 3G 1M */
 
 SECTIONS{
 	. = KERNEL_PHYADDR;
+    _kernel_image_start = . + KERNEL_OFFSET;
     .mbh.text ALIGN(0x4): {
         *(.mbh.text)
     }
@@ -22,10 +23,10 @@ SECTIONS{
 		*(.data)
 	}
 	.bss : AT(ADDR(.bss) - KERNEL_OFFSET) {
-		sbss = . ;
+		sbss = .;
 		*(COMMON)
 		*(.bss)
-		ebss = . ;
+		ebss = .;
 	}
 
     /* Page Dir */
@@ -37,5 +38,7 @@ SECTIONS{
     .pgtbl.data   ALIGN   (0x01000) : AT(ADDR(.pgtbl.data) - KERNEL_OFFSET) {
         *(.pgtbl.data)
     }
-	_end = . ;
+	
+    _kernel_image_end = . ;
+
 }

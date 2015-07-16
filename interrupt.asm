@@ -201,7 +201,6 @@ global irq%1
 extern _do_irq%1
 irq%1:
     cli
-    xchg    bx, bx
     push    byte    0   ; dummy errcode
     push    _do_irq%1
     jmp     exception_handler
@@ -268,6 +267,5 @@ exception_handler:
 
     pop     ebx                ; pop the exchanged function addr
     pop     eax            
-    xchg    bx, bx
     sti
     iret

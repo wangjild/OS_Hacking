@@ -30,4 +30,8 @@
 
 void mm_init();
 
+void show_boot_mem(multiboot_info_t *mbi);
+
+void show_kernel_image_mem();
+
 #endif
